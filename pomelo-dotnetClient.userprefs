@@ -1,0 +1,34 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="d:\workspace\pomelo-dotnetClient\pomelo-dotnetClient\src\pomelo-unityclient\PomeloClient.cs">
+    <Files>
+      <File FileName="d:\workspace\pomelo-dotnetClient\pomelo-dotnetClient\src\pomelo-unityclient\PomeloClient.cs" Line="7" Column="18" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="pomelo-dotnetClient" expanded="True" selected="True">
+            <Node name="References" expanded="True" />
+            <Node name="src" expanded="True">
+              <Node name="pomelo-unityclient" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State>
+          <Value>buffer[0]</Value>
+          <Value>buffer[1]</Value>
+          <Value>name</Value>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0752F53D-46EF-44E2-AAA9-F2FAB9F0C4FA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>pomelodotnetClient</RootNamespace>
+    <AssemblyName>pomelo-dotnetClient</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Reference Include="SimpleJson">
+      <HintPath>..\lib\SimpleJson.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="src\pomelo-unityclient\EventManager.cs" />
+    <Compile Include="src\pomelo-unityclient\PomeloClient.cs" />
+    <Compile Include="src\protobuf\Decoder.cs" />
+    <Compile Include="src\protobuf\Encoder.cs" />
+    <Compile Include="src\protobuf\MsgDecoder.cs" />
+    <Compile Include="src\protobuf\MsgEncoder.cs" />
+    <Compile Include="src\protobuf\Protobuf.cs" />
+    <Compile Include="src\protobuf\test\CodecTest.cs" />
+    <Compile Include="src\protobuf\test\ProtobufTest.cs" />
+    <Compile Include="src\protobuf\util\Util.cs" />
+    <Compile Include="src\protocol\HandShakeService.cs" />
+    <Compile Include="src\protocol\HeartBeatService.cs" />
+    <Compile Include="src\protocol\Message.cs" />
+    <Compile Include="src\protocol\MessageProtocol.cs" />
+    <Compile Include="src\protocol\MessageType.cs" />
+    <Compile Include="src\protocol\Package.cs" />
+    <Compile Include="src\protocol\PackageProtocol.cs" />
+    <Compile Include="src\protocol\PackageTypes.cs" />
+    <Compile Include="src\protocol\Protocol.cs" />
+    <Compile Include="src\protocol\ProtocolState.cs" />
+    <Compile Include="src\test\Test.cs" />
+    <Compile Include="src\test\chatClient\Main.cs" />
+    <Compile Include="src\test\transportTest\TransportTest.cs" />
+    <Compile Include="src\transport\Transporter.cs" />
+    <Compile Include="src\transport\TransportState.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\test\chatClient\server.json" />
+  </ItemGroup>
+</Project>
