@@ -1,4 +1,4 @@
-pomelo-dotnetClient
+pomelo-unityclient-socket
 =============================
 This is the pomelo dot client, support pomelo 0.3 and the new communicate protocol.It is based on native socket.
 The project is based on some libraries as follows:
