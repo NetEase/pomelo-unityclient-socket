@@ -8,6 +8,7 @@ The project is based on some libraries as follows:
 ## Demo 
 
 * [Unity3D demo](https://github.com/NetEase/pomelo-unitychat-socket) A pomelo-chat client use unity 3D.
+* [dotnet demo](https://github.com/NetEase/pomelo-dotnetchat-console) A pomelo-chat client use console and write by c#.
 
 ## How to use
 To use the dotnetClient, just include the SimpleJson.dll and pomelo-dotnetClient.dll in your project.
