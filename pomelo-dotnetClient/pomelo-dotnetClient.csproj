@@ -41,8 +41,6 @@
     <Folder Include="src\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\pomelo-unityclient\EventManager.cs" />
-    <Compile Include="src\pomelo-unityclient\PomeloClient.cs" />
     <Compile Include="src\protobuf\Decoder.cs" />
     <Compile Include="src\protobuf\Encoder.cs" />
     <Compile Include="src\protobuf\MsgDecoder.cs" />
@@ -62,12 +60,10 @@
     <Compile Include="src\protocol\Protocol.cs" />
     <Compile Include="src\protocol\ProtocolState.cs" />
     <Compile Include="src\test\Test.cs" />
-    <Compile Include="src\test\chatClient\Main.cs" />
     <Compile Include="src\test\transportTest\TransportTest.cs" />
     <Compile Include="src\transport\Transporter.cs" />
     <Compile Include="src\transport\TransportState.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="src\test\chatClient\server.json" />
+    <Compile Include="src\client\EventManager.cs" />
+    <Compile Include="src\client\PomeloClient.cs" />
   </ItemGroup>
 </Project>

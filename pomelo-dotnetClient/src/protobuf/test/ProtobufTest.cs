@@ -46,7 +46,7 @@ namespace Pomelo.Protobuf.Test
 				JsonObject result = protobuf.decode(key, bytes);
 			}
 			
-			Console.WriteLine("finish protobuf test");
+			Console.WriteLine("Protobuf test success!");
 		}
 
 		private static void print(byte[] bytes, int offset, int length){

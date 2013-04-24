@@ -1,8 +1,14 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="d:\workspace\pomelo-dotnetClient\pomelo-dotnetClient\src\pomelo-unityclient\PomeloClient.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="d:\workspace\pomelo-unityclient-socket\pomelo-dotnetClient\src\protobuf\test\ProtobufTest.cs">
     <Files>
-      <File FileName="d:\workspace\pomelo-dotnetClient\pomelo-dotnetClient\src\pomelo-unityclient\PomeloClient.cs" Line="7" Column="18" />
+      <File FileName="pomelo-dotnetClient\src\protobuf\Decoder.cs" Line="13" Column="4" />
+      <File FileName="pomelo-dotnetClient\src\client\PomeloClient.cs" Line="9" Column="34" />
+      <File FileName="pomelo-dotnetClient\src\transport\Transporter.cs" Line="90" Column="36" />
+      <File FileName="pomelo-dotnetClient\src\test\Test.cs" Line="11" Column="4" />
+      <File FileName="d:\workspace\pomelo-unityclient-socket\pomelo-dotnetClient\src\protobuf\test\ProtobufTest.cs" Line="47" Column="5" />
+      <File FileName="pomelo-dotnetClient\src\protobuf\test\CodecTest.cs" Line="12" Column="18" />
+      <File FileName="pomelo-dotnetClient\src\test\transportTest\TransportTest.cs" Line="63" Column="45" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -10,7 +16,13 @@
           <Node name="pomelo-dotnetClient" expanded="True" selected="True">
             <Node name="References" expanded="True" />
             <Node name="src" expanded="True">
-              <Node name="pomelo-unityclient" expanded="True" />
+              <Node name="protobuf" expanded="True">
+                <Node name="test" expanded="True" />
+              </Node>
+              <Node name="test" expanded="True">
+                <Node name="transportTest" expanded="True" />
+              </Node>
+              <Node name="transport" expanded="True" />
             </Node>
           </Node>
         </State>

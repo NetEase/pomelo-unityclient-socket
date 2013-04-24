@@ -6,10 +6,11 @@ namespace Pomelo.DotNetClient.Test
 {
 	public class Test
 	{
-		public static void Main1()
+		public static void Main()
 		{
-			//CodecTest.Run();
+			CodecTest.Run();
 			ProtobufTest.Run();
+			TransportTest.Run();
 		}
 	}
 }
