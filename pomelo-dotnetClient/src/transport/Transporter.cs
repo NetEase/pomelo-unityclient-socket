@@ -104,7 +104,7 @@ namespace Pomelo.DotNetClient
 				bufferOffset = HeadLength;
 				this.transportState = TransportState.readBody;
 				
-				if(offset < limit) processBytes(bytes, offset, limit);
+				if(offset <= limit) processBytes(bytes, offset, limit);
 				return true;
 			}else{
 				writeBytes(bytes, offset, length, bufferOffset, headBuffer);
