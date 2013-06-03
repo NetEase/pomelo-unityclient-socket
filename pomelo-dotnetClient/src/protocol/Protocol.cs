@@ -21,8 +21,9 @@ namespace Pomelo.DotNetClient
 		}
 
 		internal void start(JsonObject user, Action<JsonObject> callback){
-			this.handshake.request(user, callback);
 			this.transporter.start();
+			this.handshake.request(user, callback);
+
 			this.state = ProtocolState.handshaking;
 		}
 		
@@ -72,7 +73,6 @@ namespace Pomelo.DotNetClient
 			if (pkg.type == PackageType.PKG_HANDSHAKE && this.state == ProtocolState.handshaking) {
 
 				//Ignore all the message except handshading
-				string str = Encoding.UTF8.GetString(pkg.body);
 				JsonObject data = (JsonObject)SimpleJson.SimpleJson.DeserializeObject(Encoding.UTF8.GetString(pkg.body));
 				
 				processHandshakeData(data);

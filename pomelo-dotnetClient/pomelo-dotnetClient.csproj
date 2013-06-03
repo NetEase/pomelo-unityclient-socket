@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\" />
+    <Folder Include="src\client\test\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\protobuf\Decoder.cs" />
@@ -65,5 +66,6 @@
     <Compile Include="src\transport\TransportState.cs" />
     <Compile Include="src\client\EventManager.cs" />
     <Compile Include="src\client\PomeloClient.cs" />
+    <Compile Include="src\client\test\ClientTest.cs" />
   </ItemGroup>
 </Project>

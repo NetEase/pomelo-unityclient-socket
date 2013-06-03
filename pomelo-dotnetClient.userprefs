@@ -1,14 +1,15 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="d:\workspace\pomelo-unityclient-socket\pomelo-dotnetClient\src\protobuf\test\ProtobufTest.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="pomelo-dotnetClient\src\test\Test.cs">
     <Files>
-      <File FileName="pomelo-dotnetClient\src\protobuf\Decoder.cs" Line="13" Column="4" />
-      <File FileName="pomelo-dotnetClient\src\client\PomeloClient.cs" Line="9" Column="34" />
-      <File FileName="pomelo-dotnetClient\src\transport\Transporter.cs" Line="90" Column="36" />
-      <File FileName="pomelo-dotnetClient\src\test\Test.cs" Line="11" Column="4" />
-      <File FileName="d:\workspace\pomelo-unityclient-socket\pomelo-dotnetClient\src\protobuf\test\ProtobufTest.cs" Line="47" Column="5" />
-      <File FileName="pomelo-dotnetClient\src\protobuf\test\CodecTest.cs" Line="12" Column="18" />
-      <File FileName="pomelo-dotnetClient\src\test\transportTest\TransportTest.cs" Line="63" Column="45" />
+      <File FileName="pomelo-dotnetClient\src\client\PomeloClient.cs" Line="53" Column="45" />
+      <File FileName="pomelo-dotnetClient\src\client\test\ClientTest.cs" Line="38" Column="4" />
+      <File FileName="pomelo-dotnetClient\src\test\Test.cs" Line="14" Column="6" />
+      <File FileName="pomelo-dotnetClient\src\transport\Transporter.cs" Line="53" Column="3" />
+      <File FileName="d:\workspace\pomelo-unityclient-socket\pomelo-dotnetClient\src\protocol\HandShakeService.cs" Line="34" Column="1" />
+      <File FileName="d:\workspace\pomelo-unityclient-socket\pomelo-dotnetClient\src\protocol\Protocol.cs" Line="132" Column="1" />
+      <File FileName="d:\workspace\pomelo-unityclient-socket\pomelo-dotnetClient\src\protocol\MessageProtocol.cs" Line="23" Column="30" />
+      <File FileName="d:\workspace\pomelo-unityclient-socket\pomelo-dotnetClient\src\protocol\HeartBeatService.cs" Line="33" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -16,9 +17,13 @@
           <Node name="pomelo-dotnetClient" expanded="True" selected="True">
             <Node name="References" expanded="True" />
             <Node name="src" expanded="True">
+              <Node name="client" expanded="True">
+                <Node name="test" expanded="True" />
+              </Node>
               <Node name="protobuf" expanded="True">
                 <Node name="test" expanded="True" />
               </Node>
+              <Node name="protocol" expanded="True" />
               <Node name="test" expanded="True">
                 <Node name="transportTest" expanded="True" />
               </Node>

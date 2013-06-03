@@ -11,6 +11,7 @@ namespace Pomelo.DotNetClient.Test
 			CodecTest.Run();
 			ProtobufTest.Run();
 			TransportTest.Run();
+			//ClientTest.Run();
 		}
 	}
 }
