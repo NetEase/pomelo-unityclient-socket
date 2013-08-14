@@ -27,6 +27,7 @@ namespace Pomelo.DotNetClient
 		private byte[] buffer;
 		private int bufferOffset = 0;
 		private int pkgLength = 0;
+		internal Action onDisconnect = null;
 		
 		public Transporter (Socket socket, Action<byte[]> processer){
 			this.socket = socket;
@@ -75,7 +76,7 @@ namespace Pomelo.DotNetClient
 				//Receive next message
 				if(this.transportState != TransportState.closed) receive ();
 			} else{
-				Console.WriteLine("server disconnect !");
+				if(this.onDisconnect != null) this.onDisconnect();
 			}
 		}
 		

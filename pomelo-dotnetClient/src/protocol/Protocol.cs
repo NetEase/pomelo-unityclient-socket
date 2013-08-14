@@ -10,7 +10,7 @@ namespace Pomelo.DotNetClient
 		private ProtocolState state;
 		private Transporter transporter;
 		private HandShakeService handshake;
-		private HeartBeatService heartBeatService;
+		private HeartBeatService heartBeatService = null;
 		private PomeloClient pc;
 
 		public PomeloClient getPomeloClient(){
@@ -20,6 +20,8 @@ namespace Pomelo.DotNetClient
 		public Protocol(PomeloClient pc, System.Net.Sockets.Socket socket){
 			this.pc = pc;
 			this.transporter = new Transporter (socket, this.processMessage);
+			this.transporter.onDisconnect = onDisconnect;
+
 			this.handshake = new HandShakeService(this);
 			this.state = ProtocolState.start;
 		}
@@ -136,9 +138,16 @@ namespace Pomelo.DotNetClient
 			handshake.invokeCallback(user);
 		}
 
+		//The socket disconnect
+		private void onDisconnect(){
+			this.pc.disconnect();
+		}
+
 		internal void close(){
 			transporter.close();
-			heartBeatService.stop();
+
+			if(heartBeatService != null) heartBeatService.stop();
+
 			this.state = ProtocolState.closed;
 		}
 	}

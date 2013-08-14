@@ -12,6 +12,8 @@ namespace Pomelo.DotNetClient
 {
 	public class PomeloClient : IDisposable
 	{
+		public const string EVENT_DISCONNECT = "disconnect";
+
 		private EventManager eventManager;
 		private Socket socket;
 		private Protocol protocol;
@@ -23,7 +25,7 @@ namespace Pomelo.DotNetClient
 			initClient(host, port);
 			this.protocol = new Protocol(this, socket);
 		}
-		
+
 		private void initClient(string host, int port) {
 			this.socket=new Socket(AddressFamily.InterNetwork,SocketType.Stream,ProtocolType.Tcp);
 	        IPEndPoint ie=new IPEndPoint(IPAddress.Parse(host), port);
@@ -104,6 +106,9 @@ namespace Pomelo.DotNetClient
 				this.socket.Shutdown(SocketShutdown.Both);
 				this.socket.Close();
 				this.disposed = true;
+
+				//Call disconnect callback
+				eventManager.InvokeOnEvent(EVENT_DISCONNECT, null);
 			}
 		}
 	}

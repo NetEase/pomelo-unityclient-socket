@@ -9,8 +9,10 @@ namespace Pomelo.DotNetClient.Test
 
 		public static void loginTest(string host, int port){
 			pc = new PomeloClient(host, port);
+			pc.on (PomeloClient.EVENT_DISCONNECT, onDisconnect);
 
 			pc.connect(null, data=>{
+
 				Console.WriteLine("on data back" + data.ToString());
 				JsonObject msg  = new JsonObject();
 				msg["uid"] = 111;
@@ -24,7 +26,6 @@ namespace Pomelo.DotNetClient.Test
 
 		public static void OnQuery(JsonObject result){
 			if(Convert.ToInt32(result["code"]) == 200){
-				Console.WriteLine("dis connect");
 				pc.disconnect();
 				
 				string host = (string)result["host"];
@@ -33,6 +34,7 @@ namespace Pomelo.DotNetClient.Test
 				pc.connect(null, (data)=>{
 					JsonObject userMessage = new JsonObject();
 					Console.WriteLine("on connect to connector!");
+					pc.on(PomeloClient.EVENT_DISCONNECT, onDisconnect);
 
 					//Login
 					JsonObject msg  = new JsonObject();
@@ -46,6 +48,10 @@ namespace Pomelo.DotNetClient.Test
 
 		public static void OnEnter(JsonObject result){
 			Console.WriteLine("on login " + result.ToString());
+		}
+
+		public static void onDisconnect(JsonObject result){
+			Console.WriteLine("on sockect disconnected!");
 		}
 
 		public static void Run(){
