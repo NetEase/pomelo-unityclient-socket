@@ -179,7 +179,7 @@ namespace Pomelo.Protobuf
 					object __message_type;
 					if (proto.TryGetValue("__messages", out __messages)) {
 						if (((JsonObject)__messages).TryGetValue(type, out __message_type)) {
-							byte [] tembuff = new byte[Encoder.byteLength(value.ToString())];
+							byte [] tembuff = new byte[Encoder.byteLength(value.ToString())*2];
 							int length = 0;
 							length = this.encodeMsg(tembuff, length, (JsonObject)__message_type, (JsonObject)value);
 							offset = writeBytes(buffer, offset, Encoder.encodeUInt32((uint)length));

@@ -151,7 +151,7 @@ namespace Pomelo.DotNetClient
 
 			JsonObject msg;
 			if (decodeProtos.ContainsKey(route)) {
-				msg = protobuf.decode (route, buffer);
+				msg = protobuf.decode (route, body);
 			} else {
 				msg = (JsonObject)SimpleJson.SimpleJson.DeserializeObject(Encoding.UTF8.GetString(body));
 			}

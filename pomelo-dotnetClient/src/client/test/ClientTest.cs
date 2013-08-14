@@ -33,8 +33,19 @@ namespace Pomelo.DotNetClient.Test
 				pc.connect(null, (data)=>{
 					JsonObject userMessage = new JsonObject();
 					Console.WriteLine("on connect to connector!");
+
+					//Login
+					JsonObject msg  = new JsonObject();
+					msg["username"] = "test";
+					msg["rid"] = "pomelo";
+
+					pc.request("connector.entryHandler.enter", msg, OnEnter); 
 				});	
 			}
+		}
+
+		public static void OnEnter(JsonObject result){
+			Console.WriteLine("on login " + result.ToString());
 		}
 
 		public static void Run(){

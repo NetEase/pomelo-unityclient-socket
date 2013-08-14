@@ -8,23 +8,28 @@ namespace Pomelo.DotNetClient
 		int interval;
 		public int timeout;
 		Timer timer;
+		DateTime lastTime;
 
 		Protocol protocol;
 		
-		public HeartBeatService(int timeout, Protocol protocol){
-			this.interval = timeout*1000;
+		public HeartBeatService(int interval, Protocol protocol){
+			this.interval = interval*1000;
 			this.protocol = protocol;
 		}
 
 		internal void resetTimeout(){
 			this.timeout = 0;
+			lastTime = DateTime.Now;
 		}
 
 		public void sendHeartBeat(object source, ElapsedEventArgs e){
 			//check timeout
 			if(timeout > interval*2){
-				protocol.close();	
+				protocol.getPomeloClient().disconnect();
 			}
+
+			TimeSpan span = DateTime.Now - lastTime;
+			timeout += (int)span.TotalMilliseconds;
 
 			//Send heart beat
 			protocol.send(PackageType.PKG_HEARTBEAT);
@@ -41,6 +46,7 @@ namespace Pomelo.DotNetClient
 
 			//Set timeout
 			timeout = 0;
+			lastTime = DateTime.Now;
 		}
 
 		public void stop(){

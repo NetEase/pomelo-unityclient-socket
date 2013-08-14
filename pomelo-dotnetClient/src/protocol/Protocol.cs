@@ -13,6 +13,10 @@ namespace Pomelo.DotNetClient
 		private HeartBeatService heartBeatService;
 		private PomeloClient pc;
 
+		public PomeloClient getPomeloClient(){
+			return this.pc;
+		}
+
 		public Protocol(PomeloClient pc, System.Net.Sockets.Socket socket){
 			this.pc = pc;
 			this.transporter = new Transporter (socket, this.processMessage);
