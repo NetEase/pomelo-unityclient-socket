@@ -139,7 +139,7 @@ namespace Pomelo.Protobuf
 				object __messages;
 				if (proto.TryGetValue("__messages", out __messages)) {
 					object _type;
-					if (((JsonObject)__messages).TryGetValue(type, out _type)) {
+					if (((JsonObject)__messages).TryGetValue(type, out _type) || protos.TryGetValue("message " + type, out _type)) {
 						int l = (int)Decoder.decodeUInt32(this.getBytes());
 						JsonObject msg = new JsonObject();
 						return this.decodeMsg(msg, (JsonObject)_type, this.offset + l);

@@ -69,10 +69,14 @@ namespace Pomelo.Protobuf
 							object value_type;
 							
 							JsonObject messages = (JsonObject)proto["__messages"];
+
 							value_type = value["type"];
+
 							if(msg.ContainsKey(key)){
-								if(messages.ContainsKey(value_type.ToString())){
-									checkMsg ((JsonObject)msg[key], (JsonObject) messages[value_type.ToString()]);
+								Object value_proto;
+								
+								if(messages.TryGetValue(value_type.ToString(), out value_proto) || protos.TryGetValue("message " + value_type.ToString(), out value_proto)){
+									checkMsg ((JsonObject)msg[key], (JsonObject)value_proto);
 								}
 							}
 							break;
@@ -80,7 +84,7 @@ namespace Pomelo.Protobuf
 							object msg_name;
 							object msg_type;
 							if (value.TryGetValue("type", out value_type) && msg.TryGetValue(key, out msg_name)) {
-								if(((JsonObject)proto["__messages"]).TryGetValue(value_type.ToString(), out msg_type)){
+							if(((JsonObject)proto["__messages"]).TryGetValue(value_type.ToString(), out msg_type) || protos.TryGetValue("message " + value_type.ToString(), out msg_type)){
 									List<object> o = (List<object>)msg_name;
 									foreach(object item in o) {
 										if (!checkMsg((JsonObject)item, (JsonObject)msg_type)) {
@@ -177,9 +181,10 @@ namespace Pomelo.Protobuf
 				default:
 					object __messages;
 					object __message_type;
+					
 					if (proto.TryGetValue("__messages", out __messages)) {
-						if (((JsonObject)__messages).TryGetValue(type, out __message_type)) {
-							byte [] tembuff = new byte[Encoder.byteLength(value.ToString())*2];
+					if (((JsonObject)__messages).TryGetValue(type, out __message_type) || protos.TryGetValue("message " + type, out __message_type)) {
+							byte [] tembuff = new byte[Encoder.byteLength(value.ToString())*3];
 							int length = 0;
 							length = this.encodeMsg(tembuff, length, (JsonObject)__message_type, (JsonObject)value);
 							offset = writeBytes(buffer, offset, Encoder.encodeUInt32((uint)length));
@@ -205,13 +210,13 @@ namespace Pomelo.Protobuf
 		
 		//Encode double.
 		private void writeDouble(byte [] buffer, ref int offset, object value) {
-			WriteRawLittleEndian64(buffer, offset, (ulong) BitConverter.DoubleToInt64Bits((double)value));
+			WriteRawLittleEndian64(buffer, offset, (ulong) BitConverter.DoubleToInt64Bits(double.Parse(value.ToString())));
 			offset += 8;
 		}
 		
 		//Encode float.
 		private void writeFloat(byte [] buffer, ref int offset, object value) {
-			this.writeBytes(buffer, offset, Encoder.encodeFloat((float)value));
+			this.writeBytes(buffer, offset, Encoder.encodeFloat(float.Parse(value.ToString())) );
 			offset += 4;
 		}
 		

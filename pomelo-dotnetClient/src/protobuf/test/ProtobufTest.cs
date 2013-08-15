@@ -23,18 +23,20 @@ namespace Pomelo.Protobuf.Test
 			foreach(string key in keys0){
 				Console.WriteLine(a[key].GetType());
 				if(a[key].GetType().ToString() == "SimpleJson.JsonObject"){
-					equal ((JsonObject)a[key], (JsonObject)b[key]);
+					if(!equal ((JsonObject)a[key], (JsonObject)b[key])) return false;
+				}else if(a[key].GetType().ToString() == "SimpleJson.JsonArray"){
+					continue;
 				}else{
-				
+					if(!a[key].ToString().Equals(b[key].ToString())) return false;
 				}
 			}
 
-			return false;
+			return true;
 		}
 
 		public static void Run(){
-			JsonObject protos = read ("./protos.json");
-			JsonObject msgs = read ("./msg.json");
+			JsonObject protos = read ("./rootProtos.json");
+			JsonObject msgs = read ("./rootMsg.json");
 
 			Protobuf protobuf = new Protobuf(protos, protos);
 
@@ -44,6 +46,10 @@ namespace Pomelo.Protobuf.Test
 				JsonObject msg = (JsonObject)msgs[key];
 				byte[] bytes = protobuf.encode(key, msg);
 				JsonObject result = protobuf.decode(key, bytes);
+				if(!equal(msg, result)){
+					Console.WriteLine("protobuf test failed!");
+					return;
+				}
 			}
 			
 			Console.WriteLine("Protobuf test success!");
