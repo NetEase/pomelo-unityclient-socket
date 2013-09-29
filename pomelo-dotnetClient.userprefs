@@ -1,19 +1,19 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="d:\workspace\pomelo-unityclient-socket\pomelo-dotnetClient\src\protobuf\test\ProtobufTest.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="d:\workspace\pomelo-unityclient-socket\pomelo-dotnetClient\src\protocol\Protocol.cs">
     <Files>
-      <File FileName="pomelo-dotnetClient\src\client\test\ClientTest.cs" Line="1" Column="1" />
+      <File FileName="pomelo-dotnetClient\src\client\test\ClientTest.cs" Line="51" Column="4" />
       <File FileName="pomelo-dotnetClient\src\test\Test.cs" Line="14" Column="4" />
       <File FileName="d:\workspace\pomelo-unityclient-socket\pomelo-dotnetClient\src\protocol\HandShakeService.cs" Line="1" Column="1" />
-      <File FileName="d:\workspace\pomelo-unityclient-socket\pomelo-dotnetClient\src\protocol\Protocol.cs" Line="1" Column="1" />
+      <File FileName="d:\workspace\pomelo-unityclient-socket\pomelo-dotnetClient\src\protocol\Protocol.cs" Line="31" Column="18" />
       <File FileName="d:\workspace\pomelo-unityclient-socket\pomelo-dotnetClient\src\protocol\MessageProtocol.cs" Line="1" Column="1" />
-      <File FileName="d:\workspace\pomelo-unityclient-socket\pomelo-dotnetClient\src\protocol\HeartBeatService.cs" Line="1" Column="1" />
-      <File FileName="d:\workspace\pomelo-unityclient-socket\pomelo-dotnetClient\src\test\transportTest\TransportTest.cs" Line="1" Column="1" />
-      <File FileName="d:\workspace\pomelo-unityclient-socket\pomelo-dotnetClient\src\transport\Transporter.cs" Line="1" Column="1" />
-      <File FileName="d:\workspace\pomelo-unityclient-socket\pomelo-dotnetClient\src\protobuf\test\ProtobufTest.cs" Line="38" Column="38" />
-      <File FileName="pomelo-dotnetClient\src\protobuf\MsgDecoder.cs" Line="11" Column="50" />
-      <File FileName="pomelo-dotnetClient\src\protobuf\MsgEncoder.cs" Line="76" Column="28" />
-      <File FileName="d:\workspace\pomelo-unityclient-socket\pomelo-dotnetClient\src\protobuf\Protobuf.cs" Line="18" Column="1" />
+      <File FileName="d:\workspace\pomelo-unityclient-socket\pomelo-dotnetClient\src\protocol\HeartBeatService.cs" Line="15" Column="26" />
+      <File FileName="d:\workspace\pomelo-unityclient-socket\pomelo-dotnetClient\src\protobuf\test\ProtobufTest.cs" Line="36" Column="3" />
+      <File FileName="pomelo-dotnetClient\src\protobuf\MsgDecoder.cs" Line="1" Column="1" />
+      <File FileName="pomelo-dotnetClient\src\protobuf\MsgEncoder.cs" Line="1" Column="1" />
+      <File FileName="d:\workspace\pomelo-unityclient-socket\pomelo-dotnetClient\src\protobuf\Protobuf.cs" Line="1" Column="1" />
+      <File FileName="pomelo-dotnetClient\src\client\PomeloClient.cs" Line="102" Column="4" />
+      <File FileName="d:\workspace\pomelo-unityclient-socket\pomelo-dotnetClient\src\transport\Transporter.cs" Line="62" Column="30" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">

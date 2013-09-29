@@ -60,8 +60,12 @@ namespace Pomelo.DotNetClient
 		
 		internal void close(){
 			this.transportState = TransportState.closed;
-			if(this.onReceiving) socket.EndReceive (this.asyncReceive);
-			if(this.onSending) socket.EndSend(this.asyncSend);
+			/*try{
+				if(this.onReceiving) socket.EndReceive (this.asyncReceive);
+				if(this.onSending) socket.EndSend(this.asyncSend);
+			}catch (Exception e){
+				Console.WriteLine(e.Message);
+			}*/
 		}
 		
 		private void endReceive(IAsyncResult asyncReceive){
