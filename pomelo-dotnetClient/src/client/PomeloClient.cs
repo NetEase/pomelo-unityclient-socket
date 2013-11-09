@@ -27,8 +27,17 @@ namespace Pomelo.DotNetClient
 		}
 
 		private void initClient(string host, int port) {
+			IPAddress ipAddress;
+			if (!IPAddress.TryParse (host, out ipAddress)){
+			   ipAddress = Dns.GetHostEntry (host).AddressList[0];
+			}
+			else{
+				Console.WriteLine(String.Format("ERROR: cannot parse host!->{0}", host));
+				throw new Exception("Parse host error!");
+			}
+			
 			this.socket=new Socket(AddressFamily.InterNetwork,SocketType.Stream,ProtocolType.Tcp);
-	        IPEndPoint ie=new IPEndPoint(IPAddress.Parse(host), port);
+	        IPEndPoint ie=new IPEndPoint(ipAddress, port);
 	        try {
 	            this.socket.Connect(ie);
 	        }
