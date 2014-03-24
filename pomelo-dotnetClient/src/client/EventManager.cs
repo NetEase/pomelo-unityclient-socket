@@ -9,13 +9,13 @@ namespace Pomelo.DotNetClient
     {
         private  Dictionary<uint, Action<JsonObject>> callBackMap;
         private  Dictionary<string, List<Action<JsonObject>>> eventMap;
-
+        
         public EventManager ()
         {
             this.callBackMap = new Dictionary<uint, Action<JsonObject>> ();
             this.eventMap = new Dictionary<string, List<Action<JsonObject>>> ();
         }
-
+        
         //Adds callback to callBackMap by id.
         public void AddCallBack (uint id, Action<JsonObject>  callback)
         {
@@ -24,7 +24,7 @@ namespace Pomelo.DotNetClient
                 this.callBackMap.Add (id, callback);
             }
         }
-
+        
         /// <summary>
         /// Invoke the callback when the server return messge .
         /// </summary>
@@ -39,7 +39,7 @@ namespace Pomelo.DotNetClient
             }
             callBackMap [id].Invoke (data);
         }
-
+        
         //Adds the event to eventMap by name.
         public void AddOnEvent (string eventName, Action<JsonObject> callback)
         {
@@ -55,7 +55,7 @@ namespace Pomelo.DotNetClient
                 this.eventMap.Add (eventName, list);
             }
         }
-
+        
         /// <summary>
         /// If the event exists,invoke the event when server return messge.
         /// </summary>
@@ -68,19 +68,19 @@ namespace Pomelo.DotNetClient
             {
                 return;
             }
-
+            
             List<Action<JsonObject>> list = eventMap [route];
             foreach (Action<JsonObject> action in list)
                 action.Invoke (msg);
         }
-
+        
         // Dispose() calls Dispose(true)
         public void Dispose ()
         {
             Dispose (true);
             GC.SuppressFinalize (this);
         }
-
+        
         // The bulk of the clean-up code is implemented in Dispose(bool)
         protected void Dispose (bool disposing)
         {
