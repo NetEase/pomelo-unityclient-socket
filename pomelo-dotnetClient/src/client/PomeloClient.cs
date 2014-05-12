@@ -103,7 +103,12 @@ namespace Pomelo.DotNetClient
 			if (disposing) {
 				// free managed resources
 				this.protocol.close();
-				this.socket.Shutdown(SocketShutdown.Both);
+				try{
+					this.socket.Shutdown(SocketShutdown.Both);
+				} catch(Exception e) {
+					//bug fixed
+					//被动断线的情况下，socket已经被关闭，会抛出错误，以致 EVENT_DISCONNECT 没有成功回调
+				}
 				this.socket.Close();
 				this.disposed = true;
 
