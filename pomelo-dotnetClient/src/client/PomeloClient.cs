@@ -1,3 +1,5 @@
+#define LUZEXI
+
 using System.Collections;
 using SimpleJson;
 
@@ -7,6 +9,10 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Collections.Generic;
+
+//#if LUZEXI
+////using System.Collections.Concurrent;
+//#endif
 
 namespace Pomelo.DotNetClient
 {
@@ -19,7 +25,14 @@ namespace Pomelo.DotNetClient
 		private Protocol protocol;
 		private bool disposed = false;
 		private uint reqId = 1;
-		
+
+#if LUZEXI
+		//private ConcurrentQueue<Message> m_seqReceiveMessage = new ConcurrentQueue<Message>();	//The queue of the message receive
+		private Queue<Message> m_seqReceiveMessage = new Queue<Message>();
+		private System.Object m_cLock = new System.Object();	//the lock of the queue
+		private const int PROCESS_NUM = 5;	//the process of the update num
+#endif
+
 		public PomeloClient(string host, int port) {
 			this.eventManager = new EventManager();
 			initClient(host, port);
@@ -80,12 +93,47 @@ namespace Pomelo.DotNetClient
 		}
 
 		internal void processMessage(Message msg){
+#if LUZEXI
+			lock(this.m_cLock)
+			{
+				this.m_seqReceiveMessage.Enqueue(msg);
+			}
+#else
 			if(msg.type == MessageType.MSG_RESPONSE){
 				eventManager.InvokeCallBack(msg.id, msg.data);
 			}else if(msg.type == MessageType.MSG_PUSH){
 				eventManager.InvokeOnEvent(msg.route, msg.data);
 			}
+#endif
 		}
+
+#if LUZEXI
+		/// <summary>
+		/// luzexi:Update the process of the message
+		/// </summary>
+		public void Update()
+		{
+			for( int i = 0 ; i<PROCESS_NUM && i < this.m_seqReceiveMessage.Count ; i++ )
+			{
+				Message msg;
+				//if( this.m_seqReceiveMessage.TryDequeue(out msg) )
+				lock(this.m_cLock)
+				{
+					msg = this.m_seqReceiveMessage.Dequeue();
+					{
+						if(msg.type == MessageType.MSG_RESPONSE)
+						{
+							eventManager.InvokeCallBack(msg.id, msg.data);
+						}
+						else if(msg.type == MessageType.MSG_PUSH)
+						{
+							eventManager.InvokeOnEvent(msg.route, msg.data);
+						}
+					}
+				}
+			}
+		}
+#endif
 
 		public void disconnect(){
 			Dispose ();
