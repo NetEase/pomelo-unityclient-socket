@@ -1,4 +1,4 @@
-#define LUZEXI
+//#define LUZEXI
 
 using System.Collections;
 using SimpleJson;
