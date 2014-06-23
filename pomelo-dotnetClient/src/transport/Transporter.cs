@@ -37,6 +37,7 @@ namespace Pomelo.DotNetClient
 		internal Action onDisconnect = null;
 
 #if LUZEXI
+		//private ConcurrentQueue<byte[]> m_seqMsg;
 		private System.Object m_cLock = new System.Object();	//the lock object
 		private const int PROCESS_NUM = 5;	//the process handle num per fps
 		private Queue<byte[]> m_seqReceiveMsg = new Queue<byte[]>();	//the message queue

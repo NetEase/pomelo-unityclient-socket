@@ -1,18 +1,18 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|x86" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="pomelo-dotnetClient/src/protocol/Protocol.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="pomelo-dotnetClient/src/transport/Transporter.cs">
     <Files>
-      <File FileName="pomelo-dotnetClient/src/transport/Transporter.cs" Line="113" Column="17" />
-      <File FileName="pomelo-dotnetClient/src/protocol/Protocol.cs" Line="152" Column="4" />
-      <File FileName="pomelo-dotnetClient/src/client/PomeloClient.cs" Line="117" Column="21" />
+      <File FileName="pomelo-dotnetClient/src/transport/Transporter.cs" Line="11" Column="1" />
+      <File FileName="pomelo-dotnetClient/src/protocol/Protocol.cs" Line="1" Column="1" />
+      <File FileName="pomelo-dotnetClient/src/client/PomeloClient.cs" Line="1" Column="1" />
       <File FileName="pomelo-dotnetClient/src/transport/TranspotUpdate.cs" Line="1" Column="1" />
       <File FileName="pomelo-dotnetClient/src/client/EventManager.cs" Line="1" Column="1" />
-      <File FileName="pomelo-dotnetClient/src/protocol/HeartBeatService.cs" Line="48" Column="4" />
+      <File FileName="pomelo-dotnetClient/src/protocol/HeartBeatService.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="pomelo-dotnetClient" expanded="True">
+          <Node name="pomelo-dotnetClient" expanded="True" selected="True">
             <Node name="References" expanded="True" />
             <Node name="src" expanded="True">
               <Node name="client" expanded="True">
@@ -21,9 +21,7 @@
               <Node name="protobuf" expanded="True">
                 <Node name="test" expanded="True" />
               </Node>
-              <Node name="protocol" expanded="True">
-                <Node name="Protocol.cs" selected="True" />
-              </Node>
+              <Node name="protocol" expanded="True" />
               <Node name="test" expanded="True">
                 <Node name="transportTest" expanded="True" />
               </Node>
