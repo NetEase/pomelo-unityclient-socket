@@ -1,4 +1,4 @@
-//#define LUZEXI
+#define LUZEXI
 
 using System.Collections;
 using SimpleJson;
@@ -27,10 +27,7 @@ namespace Pomelo.DotNetClient
 		private uint reqId = 1;
 
 #if LUZEXI
-		//private ConcurrentQueue<Message> m_seqReceiveMessage = new ConcurrentQueue<Message>();	//The queue of the message receive
-		private Queue<Message> m_seqReceiveMessage = new Queue<Message>();
-		private System.Object m_cLock = new System.Object();	//the lock of the queue
-		private const int PROCESS_NUM = 5;	//the process of the update num
+		TranspotUpdate m_cUpdater;	//the updater of the process message
 #endif
 
 		public PomeloClient(string host, int port) {
@@ -52,20 +49,37 @@ namespace Pomelo.DotNetClient
 		}
 		
 		public void connect(){
+#if LUZEXI
+			connect(null , null);
+#else
 			protocol.start(null, null);
+#endif
 		}
 		
 		public void connect(JsonObject user){
+#if LUZEXI
+			connect(user , null);
+#else
 			protocol.start(user, null);
+#endif
 		}
 		
 		public void connect(Action<JsonObject> handshakeCallback){
+#if LUZEXI
+			connect(null ,handshakeCallback);
+#else
 			protocol.start(null, handshakeCallback);
+#endif
 		}
 		
 		public bool connect(JsonObject user, Action<JsonObject> handshakeCallback){
 			try{
+#if LUZEXI
+				this.m_cUpdater = TranspotUpdate.Init();
+				protocol.start(user, handshakeCallback , this.m_cUpdater);
+#else
 				protocol.start(user, handshakeCallback);
+#endif
 				return true;
 			}catch(Exception e){
 				Console.WriteLine(e.ToString());
@@ -93,47 +107,12 @@ namespace Pomelo.DotNetClient
 		}
 
 		internal void processMessage(Message msg){
-#if LUZEXI
-			lock(this.m_cLock)
-			{
-				this.m_seqReceiveMessage.Enqueue(msg);
-			}
-#else
 			if(msg.type == MessageType.MSG_RESPONSE){
 				eventManager.InvokeCallBack(msg.id, msg.data);
 			}else if(msg.type == MessageType.MSG_PUSH){
 				eventManager.InvokeOnEvent(msg.route, msg.data);
 			}
-#endif
 		}
-
-#if LUZEXI
-		/// <summary>
-		/// luzexi:Update the process of the message
-		/// </summary>
-		public void Update()
-		{
-			for( int i = 0 ; i<PROCESS_NUM && i < this.m_seqReceiveMessage.Count ; i++ )
-			{
-				Message msg;
-				//if( this.m_seqReceiveMessage.TryDequeue(out msg) )
-				lock(this.m_cLock)
-				{
-					msg = this.m_seqReceiveMessage.Dequeue();
-					{
-						if(msg.type == MessageType.MSG_RESPONSE)
-						{
-							eventManager.InvokeCallBack(msg.id, msg.data);
-						}
-						else if(msg.type == MessageType.MSG_PUSH)
-						{
-							eventManager.InvokeOnEvent(msg.route, msg.data);
-						}
-					}
-				}
-			}
-		}
-#endif
 
 		public void disconnect(){
 			Dispose ();
@@ -149,6 +128,16 @@ namespace Pomelo.DotNetClient
 			if(this.disposed) return;
 
 			if (disposing) {
+#if LUZEXI
+				List<Action<JsonObject>> lst = eventManager.GetEvent(EVENT_DISCONNECT);
+				this.m_cUpdater.SetOndisconnect(lst);
+
+				// free managed resources
+				this.protocol.close();
+				this.socket.Shutdown(SocketShutdown.Both);
+				this.socket.Close();
+				this.disposed = true;
+#else
 				// free managed resources
 				this.protocol.close();
 				this.socket.Shutdown(SocketShutdown.Both);
@@ -157,6 +146,7 @@ namespace Pomelo.DotNetClient
 
 				//Call disconnect callback
 				eventManager.InvokeOnEvent(EVENT_DISCONNECT, null);
+#endif
 			}
 		}
 	}

@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>pomelodotnetClient</RootNamespace>
     <AssemblyName>pomelo-dotnetClient</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>True</DebugSymbols>

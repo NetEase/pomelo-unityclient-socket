@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
-using System.Collections;
+using System.Collections.Generic;
+using SimpleJson;
 
 //	TranspotUpdate.cs
 //	Author: Lu Zexi
@@ -24,29 +25,50 @@ namespace Pomelo.DotNetClient
 		}
 		private STATE m_eStat = STATE.NONE;	//the state of the transpotUpdate
 		private Action m_cUpdate;	//update action
-		private Action m_cOnDisconnect;	//on the disconnect
+		private List<Action<JsonObject>> m_cOnDisconnect;	//on the disconnect
 
 		/// <summary>
-		/// init the transport udpate to start the work.
+		/// Init this instance.
 		/// </summary>
-		/// <param name="update">Update.</param>
-		/// <param name="ondisconnect">Ondisconnect.</param>
-		public static TranspotUpdate Init( Action update , Action ondisconnect)
+		internal static TranspotUpdate Init()
 		{
 			GameObject obj = new GameObject("Socket");
 			TranspotUpdate trans = obj.AddComponent<TranspotUpdate>();
-			trans.m_cUpdate = update;
-			trans.m_cOnDisconnect = ondisconnect;
-			trans.m_eStat = STATE.START;
 			return trans;
+		}
+
+		/// <summary>
+		/// set the update of the process message action
+		/// </summary>
+		/// <param name="update">Update.</param>
+		internal void SetUpdate( Action update )
+		{
+			this.m_cUpdate = update;
+		}
+
+		/// <summary>
+		/// set the disconnect evet.
+		/// </summary>
+		/// <param name="ondisconnect">Ondisconnect.</param>
+		internal void SetOndisconnect( List<Action<JsonObject>> ondisconnect )
+		{
+			this.m_cOnDisconnect = ondisconnect;
 		}
 
 		/// <summary>
 		/// close the updater
 		/// </summary>
-		public void Close()
+		internal void Close()
 		{
 			this.m_eStat = STATE.CLOSE;
+		}
+
+		/// <summary>
+		/// Start this update.
+		/// </summary>
+		internal void _Start()
+		{
+			this.m_eStat = STATE.START;
 		}
 
 		/// <summary>
@@ -65,7 +87,12 @@ namespace Pomelo.DotNetClient
 				break;
 			case STATE.CLOSE:
 				this.m_eStat = STATE.NONE;
-				this.m_cOnDisconnect();
+				if(this.m_cOnDisconnect != null )
+				{
+					foreach(Action<JsonObject> action in this.m_cOnDisconnect)
+						action.Invoke(null);
+				}
+				this.m_cOnDisconnect = null;
 				GameObject.Destroy(gameObject);
 				break;
 			}

@@ -42,19 +42,26 @@ namespace Pomelo.DotNetClient
 		private Queue<byte[]> m_seqReceiveMsg = new Queue<byte[]>();	//the message queue
 		private TranspotUpdate m_cUpdater = null;	//The Updater of the message queue
 #endif
-		
+
 		public Transporter (Socket socket, Action<byte[]> processer){
 			this.socket = socket;
 			this.messageProcesser = processer;
 			transportState = TransportState.readHead;
 		}
-		
-		public void start(){
+
 #if LUZEXI
-			this.m_cUpdater = TranspotUpdate.Init(Update , OnDisconnect);
-#endif
+		public void start(TranspotUpdate Updater )
+		{
+			this.m_cUpdater = Updater;
+			this.m_cUpdater.SetUpdate(Update);
+			this.m_cUpdater._Start();
 			this.receive();
 		}
+#else
+		public void start(){
+			this.receive();
+		}
+#endif
 		
 		public void send(byte[] buffer){
 			if(this.transportState != TransportState.closed){ 
@@ -78,7 +85,6 @@ namespace Pomelo.DotNetClient
 		internal void close(){
 			this.transportState = TransportState.closed;
 #if LUZEXI
-			if(this.m_cUpdater != null )
 			{
 				this.m_cUpdater.Close();
 				this.m_cUpdater = null;
@@ -104,12 +110,7 @@ namespace Pomelo.DotNetClient
 				//Receive next message
 				if(this.transportState != TransportState.closed) receive ();
 			} else{
-#if LUZEXI
-				this.m_cUpdater.Close();
-				this.m_cUpdater = null;
-#else
 				if(this.onDisconnect != null) this.onDisconnect();
-#endif
 			}
 		}
 		
@@ -201,14 +202,6 @@ namespace Pomelo.DotNetClient
 					this.messageProcesser.Invoke(data);
 				}
 			}
-		}
-
-		/// <summary>
-		/// Raises the disconnect event.
-		/// </summary>
-		internal void OnDisconnect()
-		{
-			if(this.onDisconnect != null) this.onDisconnect();
 		}
 #endif
 	}

@@ -1,3 +1,5 @@
+#define LUZEXI
+
 using System;
 using SimpleJson;
 using System.Text;
@@ -16,8 +18,8 @@ namespace Pomelo.DotNetClient
 		public PomeloClient getPomeloClient(){
 			return this.pc;
 		}
-
-		public Protocol(PomeloClient pc, System.Net.Sockets.Socket socket){
+		
+		public Protocol(PomeloClient pc, System.Net.Sockets.Socket socket ){
 			this.pc = pc;
 			this.transporter = new Transporter (socket, this.processMessage);
 			this.transporter.onDisconnect = onDisconnect;
@@ -26,8 +28,13 @@ namespace Pomelo.DotNetClient
 			this.state = ProtocolState.start;
 		}
 
+#if LUZEXI
+		internal void start(JsonObject user, Action<JsonObject> callback , TranspotUpdate updater){
+			this.transporter.start(updater);
+#else
 		internal void start(JsonObject user, Action<JsonObject> callback){
 			this.transporter.start();
+#endif
 			this.handshake.request(user, callback);
 
 			this.state = ProtocolState.handshaking;

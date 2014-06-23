@@ -1,14 +1,13 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|x86" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="pomelo-dotnetClient/src/transport/Transporter.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="pomelo-dotnetClient/src/protocol/Protocol.cs">
     <Files>
-      <File FileName="pomelo-dotnetClient/src/client/PomeloClient.cs" Line="110" Column="11" />
-      <File FileName="pomelo-dotnetClient/src/protocol/Protocol.cs" Line="31" Column="21" />
-      <File FileName="pomelo-dotnetClient/src/protocol/HandShakeService.cs" Line="26" Column="15" />
-      <File FileName="pomelo-dotnetClient/src/protocol/MessageProtocol.cs" Line="105" Column="3" />
-      <File FileName="pomelo-dotnetClient/src/protocol/HeartBeatService.cs" Line="40" Column="3" />
-      <File FileName="pomelo-dotnetClient/src/transport/TransportState.cs" Line="1" Column="1" />
-      <File FileName="pomelo-dotnetClient/src/transport/Transporter.cs" Line="10" Column="1" />
+      <File FileName="pomelo-dotnetClient/src/transport/Transporter.cs" Line="113" Column="17" />
+      <File FileName="pomelo-dotnetClient/src/protocol/Protocol.cs" Line="152" Column="4" />
+      <File FileName="pomelo-dotnetClient/src/client/PomeloClient.cs" Line="117" Column="21" />
+      <File FileName="pomelo-dotnetClient/src/transport/TranspotUpdate.cs" Line="1" Column="1" />
+      <File FileName="pomelo-dotnetClient/src/client/EventManager.cs" Line="1" Column="1" />
+      <File FileName="pomelo-dotnetClient/src/protocol/HeartBeatService.cs" Line="48" Column="4" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -22,13 +21,13 @@
               <Node name="protobuf" expanded="True">
                 <Node name="test" expanded="True" />
               </Node>
-              <Node name="protocol" expanded="True" />
+              <Node name="protocol" expanded="True">
+                <Node name="Protocol.cs" selected="True" />
+              </Node>
               <Node name="test" expanded="True">
                 <Node name="transportTest" expanded="True" />
               </Node>
-              <Node name="transport" expanded="True">
-                <Node name="Transporter.cs" selected="True" />
-              </Node>
+              <Node name="transport" expanded="True" />
             </Node>
           </Node>
         </State>
