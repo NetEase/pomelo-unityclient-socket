@@ -114,6 +114,32 @@ namespace Pomelo.DotNetClient
 			}
 		}
 
+#if LUZEXI
+		/// <summary>
+		/// Determines whether this socket is connect.
+		/// </summary>
+		/// <returns><c>true</c> if this instance is connect; otherwise, <c>false</c>.</returns>
+		public bool IsConnect()
+		{
+			if( this.protocol != null && this.protocol.GetState() == ProtocolState.working )
+			{
+				return true;
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Raises the disconnect event.
+		/// </summary>
+		internal void OnDisconnect()
+		{
+			List<Action<JsonObject>> lst = eventManager.GetEvent(EVENT_DISCONNECT);
+			this.m_cUpdater.SetOndisconnect(lst);
+			this.m_cUpdater.Close();
+			disconnect();
+		}
+#endif
+
 		public void disconnect(){
 			Dispose ();
 		}
@@ -129,8 +155,8 @@ namespace Pomelo.DotNetClient
 
 			if (disposing) {
 #if LUZEXI
-				List<Action<JsonObject>> lst = eventManager.GetEvent(EVENT_DISCONNECT);
-				this.m_cUpdater.SetOndisconnect(lst);
+				this.m_cUpdater._Destory();
+				this.m_cUpdater =  null;
 
 				// free managed resources
 				this.protocol.close();

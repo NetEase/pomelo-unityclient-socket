@@ -1,22 +1,25 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="pomelo-dotnetClient/src/transport/Transporter.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="pomelo-dotnetClient/src/client/PomeloClient.cs">
     <Files>
-      <File FileName="pomelo-dotnetClient/src/transport/Transporter.cs" Line="11" Column="1" />
-      <File FileName="pomelo-dotnetClient/src/protocol/Protocol.cs" Line="1" Column="1" />
-      <File FileName="pomelo-dotnetClient/src/client/PomeloClient.cs" Line="1" Column="1" />
-      <File FileName="pomelo-dotnetClient/src/transport/TranspotUpdate.cs" Line="1" Column="1" />
+      <File FileName="pomelo-dotnetClient/src/transport/Transporter.cs" Line="157" Column="25" />
+      <File FileName="pomelo-dotnetClient/src/protocol/Protocol.cs" Line="159" Column="22" />
+      <File FileName="pomelo-dotnetClient/src/client/PomeloClient.cs" Line="128" Column="17" />
+      <File FileName="pomelo-dotnetClient/src/transport/TranspotUpdate.cs" Line="78" Column="27" />
       <File FileName="pomelo-dotnetClient/src/client/EventManager.cs" Line="1" Column="1" />
-      <File FileName="pomelo-dotnetClient/src/protocol/HeartBeatService.cs" Line="1" Column="1" />
+      <File FileName="pomelo-dotnetClient/src/protocol/HeartBeatService.cs" Line="30" Column="11" />
+      <File FileName="pomelo-dotnetClient/src/protocol/HandShakeService.cs" Line="1" Column="1" />
+      <File FileName="pomelo-dotnetClient/src/protocol/ProtocolState.cs" Line="6" Column="2" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="pomelo-dotnetClient" expanded="True" selected="True">
+          <Node name="pomelo-dotnetClient" expanded="True">
             <Node name="References" expanded="True" />
             <Node name="src" expanded="True">
               <Node name="client" expanded="True">
                 <Node name="test" expanded="True" />
+                <Node name="PomeloClient.cs" selected="True" />
               </Node>
               <Node name="protobuf" expanded="True">
                 <Node name="test" expanded="True" />

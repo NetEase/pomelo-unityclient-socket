@@ -37,7 +37,6 @@ namespace Pomelo.DotNetClient
 		internal Action onDisconnect = null;
 
 #if LUZEXI
-		//private ConcurrentQueue<byte[]> m_seqMsg;
 		private System.Object m_cLock = new System.Object();	//the lock object
 		private const int PROCESS_NUM = 5;	//the process handle num per fps
 		private Queue<byte[]> m_seqReceiveMsg = new Queue<byte[]>();	//the message queue
@@ -85,12 +84,6 @@ namespace Pomelo.DotNetClient
 		
 		internal void close(){
 			this.transportState = TransportState.closed;
-#if LUZEXI
-			{
-				this.m_cUpdater.Close();
-				this.m_cUpdater = null;
-			}
-#endif
 			/*try{
 				if(this.onReceiving) socket.EndReceive (this.asyncReceive);
 				if(this.onSending) socket.EndSend(this.asyncSend);
@@ -156,10 +149,7 @@ namespace Pomelo.DotNetClient
 				offset += length;
 
 #if LUZEXI
-				lock(this.m_cLock)
-				{
-					this.m_seqReceiveMsg.Enqueue(buffer);
-				}
+				this.m_seqReceiveMsg.Enqueue(buffer);
 #else
 				//Invoke the protocol api to handle the message
 				this.messageProcesser.Invoke(buffer);

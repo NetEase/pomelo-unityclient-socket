@@ -22,6 +22,7 @@ namespace Pomelo.DotNetClient
 			START = 1,
 			RUNING = 2,
 			CLOSE = 3,
+			DESTORY = 4,
 		}
 		private STATE m_eStat = STATE.NONE;	//the state of the transpotUpdate
 		private Action m_cUpdate;	//update action
@@ -72,6 +73,15 @@ namespace Pomelo.DotNetClient
 		}
 
 		/// <summary>
+		/// destory the gameobject.
+		/// </summary>
+		internal void _Destory()
+		{
+			if(this.m_eStat != STATE.CLOSE)
+				this.m_eStat = STATE.DESTORY;
+		}
+
+		/// <summary>
 		/// Fixeds the update.
 		/// </summary>
 		void FixedUpdate()
@@ -86,13 +96,16 @@ namespace Pomelo.DotNetClient
 				}
 				break;
 			case STATE.CLOSE:
-				this.m_eStat = STATE.NONE;
 				if(this.m_cOnDisconnect != null )
 				{
 					foreach(Action<JsonObject> action in this.m_cOnDisconnect)
 						action.Invoke(null);
 				}
 				this.m_cOnDisconnect = null;
+				this.m_eStat = STATE.DESTORY;
+				break;
+			case STATE.DESTORY:
+				this.m_eStat = STATE.NONE;
 				GameObject.Destroy(gameObject);
 				break;
 			}

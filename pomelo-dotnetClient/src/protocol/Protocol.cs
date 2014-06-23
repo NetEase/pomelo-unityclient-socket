@@ -146,9 +146,24 @@ namespace Pomelo.DotNetClient
 		}
 
 		//The socket disconnect
-		private void onDisconnect(){
+		internal void onDisconnect(){
+#if LUZEXI
+			this.pc.OnDisconnect();
+#else
 			this.pc.disconnect();
+#endif
 		}
+		
+#if LUZEXI
+		/// <summary>
+		/// Gets the state.
+		/// </summary>
+		/// <returns>The state.</returns>
+		internal ProtocolState GetState()
+		{
+			return this.state;
+		}
+#endif
 
 		internal void close(){
 			transporter.close();
