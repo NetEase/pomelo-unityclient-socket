@@ -92,7 +92,12 @@ namespace Pomelo.DotNetClient
 			}*/
 		}
 		
-		private void endReceive(IAsyncResult asyncReceive){
+		private void endReceive(IAsyncResult asyncReceive)
+		{
+#if LUZEXI
+			try
+			{
+#endif
 			if(this.transportState == TransportState.closed) return;
 			StateObject state = (StateObject)asyncReceive.AsyncState;
 			Socket socket = this.socket;
@@ -106,6 +111,14 @@ namespace Pomelo.DotNetClient
 			} else{
 				if(this.onDisconnect != null) this.onDisconnect();
 			}
+#if LUZEXI
+			}
+			catch(Exception ex)
+			{
+				this.transportState = TransportState.closed;
+				if(this.onDisconnect != null ) this.onDisconnect();
+			}
+#endif
 		}
 		
 		internal void processBytes(byte[] bytes, int offset, int limit){
