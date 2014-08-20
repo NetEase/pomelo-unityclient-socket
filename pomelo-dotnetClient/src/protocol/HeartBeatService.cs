@@ -1,3 +1,5 @@
+#define LUZEXI
+
 using System;
 using System.Timers;
 
@@ -25,7 +27,11 @@ namespace Pomelo.DotNetClient
 		public void sendHeartBeat(object source, ElapsedEventArgs e){
 			//check timeout
 			if(timeout > interval*2){
+#if LUZEXI
+				protocol.onDisconnect();
+#else
 				protocol.getPomeloClient().disconnect();
+#endif
 				stop ();
 				return;
 			}

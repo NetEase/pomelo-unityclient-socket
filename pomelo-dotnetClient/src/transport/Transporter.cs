@@ -1,5 +1,12 @@
+#define LUZEXI
+
 using System;
+using System.Collections.Generic;
 using System.Net.Sockets;
+
+#if LUZEXI
+using UnityEngine;
+#endif
 
 namespace Pomelo.DotNetClient
 {
@@ -28,16 +35,33 @@ namespace Pomelo.DotNetClient
 		private int bufferOffset = 0;
 		private int pkgLength = 0;
 		internal Action onDisconnect = null;
-		
+
+#if LUZEXI
+		private System.Object m_cLock = new System.Object();	//the lock object
+		private const int PROCESS_NUM = 5;	//the process handle num per fps
+		private Queue<byte[]> m_seqReceiveMsg = new Queue<byte[]>();	//the message queue
+		private TranspotUpdate m_cUpdater = null;	//The Updater of the message queue
+#endif
+
 		public Transporter (Socket socket, Action<byte[]> processer){
 			this.socket = socket;
 			this.messageProcesser = processer;
 			transportState = TransportState.readHead;
 		}
-		
-		public void start(){
-			this.receive ();
+
+#if LUZEXI
+		public void start(TranspotUpdate Updater )
+		{
+			this.m_cUpdater = Updater;
+			this.m_cUpdater.SetUpdate(Update);
+			this.m_cUpdater._Start();
+			this.receive();
 		}
+#else
+		public void start(){
+			this.receive();
+		}
+#endif
 		
 		public void send(byte[] buffer){
 			if(this.transportState != TransportState.closed){ 
@@ -68,7 +92,12 @@ namespace Pomelo.DotNetClient
 			}*/
 		}
 		
-		private void endReceive(IAsyncResult asyncReceive){
+		private void endReceive(IAsyncResult asyncReceive)
+		{
+#if LUZEXI
+			try
+			{
+#endif
 			if(this.transportState == TransportState.closed) return;
 			StateObject state = (StateObject)asyncReceive.AsyncState;
 			Socket socket = this.socket;
@@ -82,6 +111,14 @@ namespace Pomelo.DotNetClient
 			} else{
 				if(this.onDisconnect != null) this.onDisconnect();
 			}
+#if LUZEXI
+			}
+			catch(Exception ex)
+			{
+				this.transportState = TransportState.closed;
+				if(this.onDisconnect != null ) this.onDisconnect();
+			}
+#endif
 		}
 		
 		internal void processBytes(byte[] bytes, int offset, int limit){
@@ -123,9 +160,13 @@ namespace Pomelo.DotNetClient
 			if ((offset + length) <= limit) {
 				writeBytes (bytes, offset, length, bufferOffset, buffer);
 				offset += length;
-				
+
+#if LUZEXI
+				this.m_seqReceiveMsg.Enqueue(buffer);
+#else
 				//Invoke the protocol api to handle the message
 				this.messageProcesser.Invoke(buffer);
+#endif
 				this.bufferOffset = 0;
 				this.pkgLength = 0;
 				
@@ -135,7 +176,7 @@ namespace Pomelo.DotNetClient
 				writeBytes (bytes, offset, limit - offset, bufferOffset, buffer);
 				bufferOffset += limit - offset;
 				this.transportState = TransportState.readBody;
-			}			
+			}
 		}
 		
 		private void writeBytes(byte [] source, int start, int length, byte [] target){
@@ -153,5 +194,19 @@ namespace Pomelo.DotNetClient
 				Console.Write(Convert.ToString(bytes[i], 16) + " ");
 			Console.WriteLine();
 		}
+
+#if LUZEXI
+		internal void Update()
+		{
+			for( int i = 0 ; i<PROCESS_NUM && i< this.m_seqReceiveMsg.Count; i++)
+			{
+				lock(this.m_cLock)
+				{
+					byte[] data = this.m_seqReceiveMsg.Dequeue();
+					this.messageProcesser.Invoke(data);
+				}
+			}
+		}
+#endif
 	}
 }
