@@ -1,12 +1,8 @@
-using System.Collections;
-using SimpleJson;
+锘縰sing SimpleJson;
 
 using System;
-using System.Text;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
-using System.Collections.Generic;
 
 namespace Pomelo.DotNetClient
 {
@@ -21,9 +17,9 @@ namespace Pomelo.DotNetClient
         private uint reqId = 1;
 
         /// <summary>
-        /// 客户端初始化
+        /// 瀹㈡埛绔垵濮嬪寲
         /// </summary>
-        /// <param name="host">server name or server ip (支持www.xxx.com/127.0.0.1/::1/localhost)</param>
+        /// <param name="host">server name or server ip (鏀寔www.xxx.com/127.0.0.1/::1/localhost)</param>
         /// <param name="port">server port</param>
         public PomeloClient(string host, int port)
         {
@@ -33,9 +29,9 @@ namespace Pomelo.DotNetClient
         }
 
         /// <summary>
-        /// 初始化客户端socket连接
+        /// 鍒濆鍖栧鎴风socket杩炴帴
         /// </summary>
-        /// <param name="host">server name or server ip (支持www.xxx.com/127.0.0.1/::1/localhost)</param>
+        /// <param name="host">server name or server ip (鏀寔www.xxx.com/127.0.0.1/::1/localhost)</param>
         /// <param name="port">server port</param>
         private void initClient(string host, int port)
         {
@@ -100,9 +96,10 @@ namespace Pomelo.DotNetClient
             }
         }
 
+        private JsonObject emptyMsg = new JsonObject();
         public void request(string route, Action<JsonObject> action)
         {
-            this.request(route, new JsonObject(), action);
+            this.request(route, emptyMsg, action);
         }
 
         public void request(string route, JsonObject msg, Action<JsonObject> action)
@@ -155,10 +152,18 @@ namespace Pomelo.DotNetClient
             {
                 // free managed resources
                 this.protocol.close();
-                this.socket.Shutdown(SocketShutdown.Both);
+
+                try
+                {
+                    this.socket.Shutdown(SocketShutdown.Both);
+                }
+                catch (Exception)
+                {
+                    //todo : 鏈夊緟纭畾杩欓噷鏄惁浼氬嚭鐜板紓甯革紝杩欓噷鏄弬鑰冧箣鍓嶅畼鏂筭ithub涓妏ull request銆俥mptyMsg
+                }
+
                 this.socket.Close();
                 this.disposed = true;
-
                 //Call disconnect callback
                 eventManager.InvokeOnEvent(EVENT_DISCONNECT, null);
             }

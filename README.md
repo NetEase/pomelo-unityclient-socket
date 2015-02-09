@@ -1,7 +1,7 @@
 pomelo-unityclient-socket
 =============================
-这个是pomelo的.net客户端，可在unity3d(android,ios,pc)中使用。
-网易官方pomelo的.net客户端现在处于无人维护状态，好多issue也无人修改，提交了也没人合并，我们项目用的这货，所以fork了一下，继续维护。
+这个是pomelo的 unity3d(.net)客户端，可在android,ios,pc上使用。
+网易官方pomelo的.net客户端现在处于无人维护状态，好多issue也无人修改，提交了也没人合并，所以fork了一下，继续维护。
 
 依赖的库:
 * [SimpleJson](http://simplejson.codeplex.com/)：json解析和序列化的库(目前ios上解析List时候会有bug，尚未修正，后续版本会修正)。
@@ -10,8 +10,7 @@ pomelo-unityclient-socket
 * [pomelo-chat-demo](https://github.com/koalaylj/pomelo-chat-demo)：demo for test，客户端用C#重写了下官方那个聊天的例子。
 
 ## How to use
-* 原生.Net: 把dist目录下的 SimpleJson.dll 和 pomelo-dotnetClient.dll添加到引用中。
-* Unity3D : 把 dist目录下 SimpleJson.dll 和 pomelo-dotnetClient.dll 这两个文件放到Assets/Plugins目录下。
+	把 dist目录下 SimpleJson.dll 和 pomelo-dotnetClient.dll 这两个文件放到Unity3D项目 Assets/Plugins目录下。
 
 ## API
 
@@ -57,10 +56,16 @@ Disconnect the client.
 ```c#
 pclient.disconnect();
 ```
+## 已知BUG
+* [can't parse json array on iOS](https://github.com/NetEase/pomelo-unityclient-socket/issues/10)
+* socket断开处理
+* 客户端缓冲池
 
 ## Release Note
 * 2014年2月9日
 	- new feature : PomeloClient实现域名解析；
+
+
 
 
 ##License
