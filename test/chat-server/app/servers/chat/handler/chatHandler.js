@@ -15,7 +15,7 @@ var handler = Handler.prototype;
  *
  * @param {Object} msg message from client
  * @param {Object} session
- * @param  {Function} next next stemp callback
+ * @param  {Function} next next step callback
  *
  */
 handler.send = function (msg, session, next) {
