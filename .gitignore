@@ -6,7 +6,6 @@
 *.user
 *.log
 *.tlog
-*.pdb
 
 
 # directories
