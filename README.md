@@ -58,12 +58,15 @@ pclient.disconnect();
 ```
 ## 已知BUG
 * [can't parse json array on iOS](https://github.com/NetEase/pomelo-unityclient-socket/issues/10)
-* socket断开处理
-* 客户端缓冲池
+* socket断开处理细节处理
+* 客户端消息缓冲池
+* socket.connect需要改成异步处理
+* 通知上层当前的网络状态
 
 ## Release Note
 * 2014年2月9日
-	- new feature : PomeloClient实现域名解析；
+	- NewFeature : PomeloClient实现域名解析；
+	- BugFix:socket意外断开不会调用OnDisconnect问题；
 
 
 
