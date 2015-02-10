@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pomelo-dotnetClient", "pomelo-dotnetClient\pomelo-dotnetClient.csproj", "{0752F53D-46EF-44E2-AAA9-F2FAB9F0C4FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chat-client", "test\chat-client\chat-client.csproj", "{6934B24F-C484-4CA9-9B9A-ECDC1B058169}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +27,16 @@ Global
 		{0752F53D-46EF-44E2-AAA9-F2FAB9F0C4FA}.Release|Mixed Platforms.Build.0 = Release|x86
 		{0752F53D-46EF-44E2-AAA9-F2FAB9F0C4FA}.Release|x86.ActiveCfg = Release|x86
 		{0752F53D-46EF-44E2-AAA9-F2FAB9F0C4FA}.Release|x86.Build.0 = Release|x86
+		{6934B24F-C484-4CA9-9B9A-ECDC1B058169}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6934B24F-C484-4CA9-9B9A-ECDC1B058169}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6934B24F-C484-4CA9-9B9A-ECDC1B058169}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6934B24F-C484-4CA9-9B9A-ECDC1B058169}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6934B24F-C484-4CA9-9B9A-ECDC1B058169}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6934B24F-C484-4CA9-9B9A-ECDC1B058169}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6934B24F-C484-4CA9-9B9A-ECDC1B058169}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6934B24F-C484-4CA9-9B9A-ECDC1B058169}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6934B24F-C484-4CA9-9B9A-ECDC1B058169}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{6934B24F-C484-4CA9-9B9A-ECDC1B058169}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

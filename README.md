@@ -2,6 +2,7 @@ pomelo-unityclient-socket
 =============================
 这个是pomelo的 unity3d(.net)客户端，可在android,ios,pc上使用。
 网易官方pomelo的.net客户端现在处于无人维护状态，好多issue也无人修改，提交了也没人合并，所以fork了一下，继续维护。
+有问题可以到qq群内讨论：ProudCat(223460081)
 
 依赖的库:
 * [SimpleJson](http://simplejson.codeplex.com/)：json解析和序列化的库(目前ios上解析List时候会有bug，尚未修正，后续版本会修正)。
@@ -10,7 +11,8 @@ pomelo-unityclient-socket
 * [pomelo-chat-demo](https://github.com/koalaylj/pomelo-chat-demo)：demo for test，客户端用C#重写了下官方那个聊天的例子。
 
 ## How to use
-	把 dist目录下 SimpleJson.dll 和 pomelo-dotnetClient.dll 这两个文件放到Unity3D项目 Assets/Plugins目录下。
+* U3D项目：把 dist目录下 SimpleJson.dll 和 pomelo-dotnetClient.dll 这两个文件放到Unity3D项目 Assets/Plugins目录下。
+* 测试：可视化测试放在test目录下，命令行到test\chat-server后执行` $pomelo start` 命令启动聊天服务端。然后vs打开pomelo-dotnetClient.sln执行chat-client项目即可。
 
 ## API
 
