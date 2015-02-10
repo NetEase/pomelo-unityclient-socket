@@ -5,7 +5,7 @@
 *.suo
 *.user
 *.log
-*.tlog
+# *.tlog
 
 
 # directories
