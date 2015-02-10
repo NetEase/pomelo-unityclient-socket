@@ -29,6 +29,9 @@ namespace Pomelo.DotNetClient
         private int pkgLength = 0;
         internal Action onDisconnect = null;
 
+        private TransportQueue<byte[]> _receiveQueue = new TransportQueue<byte[]>();
+        private System.Object _lock = new System.Object();
+
         public Transporter(Socket socket, Action<byte[]> processer)
         {
             this.socket = socket;
@@ -45,13 +48,21 @@ namespace Pomelo.DotNetClient
         {
             if (this.transportState != TransportState.closed)
             {
+                //string str = "";
+                //foreach (byte code in buffer)
+                //{
+                //    str += code.ToString();
+                //}
+                //Console.WriteLine("send:" + buffer.Length + " " + str.Length + "  " + str);
                 this.asyncSend = socket.BeginSend(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(sendCallback), socket);
+
                 this.onSending = true;
             }
         }
 
         private void sendCallback(IAsyncResult asyncSend)
         {
+            //UnityEngine.Debug.Log("sendCallback " + this.transportState);
             if (this.transportState == TransportState.closed) return;
             socket.EndSend(asyncSend);
             this.onSending = false;
@@ -157,7 +168,9 @@ namespace Pomelo.DotNetClient
                 offset += length;
 
                 //Invoke the protocol api to handle the message
-                this.messageProcesser.Invoke(buffer);
+                //this.messageProcesser.Invoke(buffer);
+                //FIXED:放入接受消息队列
+                this._receiveQueue.Enqueue(buffer);
                 this.bufferOffset = 0;
                 this.pkgLength = 0;
 
@@ -190,6 +203,18 @@ namespace Pomelo.DotNetClient
             for (int i = offset; i < length; i++)
                 Console.Write(Convert.ToString(bytes[i], 16) + " ");
             Console.WriteLine();
+        }
+        /// <summary>
+        /// 委托给主线程回调的更新函数
+        /// 没有办法啦，目前只能一次处理一个回调
+        /// </summary>
+        internal void Update()
+        {
+            if (this._receiveQueue.Count > 0)
+            {
+                byte[] data = this._receiveQueue.Dequeue();
+                this.messageProcesser.Invoke(data);
+            }
         }
     }
 }

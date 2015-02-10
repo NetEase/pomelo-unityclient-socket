@@ -69,17 +69,17 @@ namespace Pomelo.DotNetClient
 
         public void connect()
         {
-            protocol.start(null, null);
+            connect(null, null);
         }
 
         public void connect(JsonObject user)
         {
-            protocol.start(user, null);
+            connect(user, null);
         }
 
         public void connect(Action<JsonObject> handshakeCallback)
         {
-            protocol.start(null, handshakeCallback);
+            connect(null, handshakeCallback);
         }
 
         public bool connect(JsonObject user, Action<JsonObject> handshakeCallback)
@@ -166,6 +166,16 @@ namespace Pomelo.DotNetClient
                 this.disposed = true;
                 //Call disconnect callback
                 eventManager.InvokeOnEvent(EVENT_DISCONNECT, null);
+            }
+        }
+        /// <summary>
+        /// 主线程调用，获取接受消息的更新
+        /// </summary>
+        public void UpdateRevice()
+        {
+            if(this.protocol != null)
+            {
+                this.protocol.Update();
             }
         }
     }

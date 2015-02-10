@@ -40,6 +40,7 @@
   <ItemGroup />
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\transport\TransportQueue.cs" />
     <Compile Include="src\protobuf\Decoder.cs" />
     <Compile Include="src\protobuf\Encoder.cs" />
     <Compile Include="src\protobuf\MsgDecoder.cs" />
@@ -66,4 +67,7 @@
     <Compile Include="src\client\PomeloClient.cs" />
     <Compile Include="src\client\test\ClientTest.cs" />
   </ItemGroup>
+  <PropertyGroup>
+    <PostBuildEvent>copy $(TargetPath) ..\..\dist\$(TargetFileName)</PostBuildEvent>
+  </PropertyGroup>
 </Project>

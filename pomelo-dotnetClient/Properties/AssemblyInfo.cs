@@ -6,10 +6,10 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("pomelo-dotnet-client")]
-[assembly: AssemblyDescription("pomelo dotnet client(compatible with unity3d)")]
+[assembly: AssemblyDescription("pomelo unity3d(dotnet) client with native socket")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("pomelodotnetClient.Properties")]
+[assembly: AssemblyProduct("Pomelo-Unity3D")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

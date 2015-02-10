@@ -15,7 +15,7 @@ var handler = Handler.prototype;
  *
  * @param {Object} msg message from client
  * @param {Object} session
- * @param  {Function} next next step callback
+ * @param  {Function} next next stemp callback
  *
  */
 handler.send = function (msg, session, next) {
@@ -45,6 +45,6 @@ handler.send = function (msg, session, next) {
         ]);
     }
     next(null, {
-        route: msg.__route__
+        route: msg.route
     });
 };
