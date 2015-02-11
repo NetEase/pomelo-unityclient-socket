@@ -1,0 +1,12 @@
+# User-specific files
+*.suo
+*.user
+*.log
+
+
+# directories
+pomelo-dotnetClient/obj/
+test/chat-client/obj/
+test/chat-server/logs/
+bin/Debug/
+bin/Release/

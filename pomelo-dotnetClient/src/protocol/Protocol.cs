@@ -150,6 +150,10 @@ namespace Pomelo.DotNetClient
 
 			this.state = ProtocolState.closed;
 		}
+		internal void Update()
+		{
+			transporter.Update();
+		}
 	}
 }
 
