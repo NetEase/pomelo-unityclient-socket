@@ -13,6 +13,7 @@ namespace Pomelo.DotNetClient.Test
             ProtobufTest.Run();
             TransportTest.Run();
             ClientTest.Run();
+            Console.ReadKey();
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using SimpleJson;
+using Pomelo.Protobuf;
 
 namespace Pomelo.Protobuf.Test
 {
@@ -73,3 +74,4 @@ namespace Pomelo.Protobuf.Test
         }
     }
 }
+
