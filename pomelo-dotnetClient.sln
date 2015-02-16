@@ -1,18 +1,45 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pomelo-dotnetClient", "pomelo-dotnetClient\pomelo-dotnetClient.csproj", "{0752F53D-46EF-44E2-AAA9-F2FAB9F0C4FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "test\test.csproj", "{0FFBA04C-F690-41DB-A795-BD6EC44C04AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0752F53D-46EF-44E2-AAA9-F2FAB9F0C4FA}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{0752F53D-46EF-44E2-AAA9-F2FAB9F0C4FA}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{0752F53D-46EF-44E2-AAA9-F2FAB9F0C4FA}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{0752F53D-46EF-44E2-AAA9-F2FAB9F0C4FA}.Debug|x86.ActiveCfg = Debug|x86
 		{0752F53D-46EF-44E2-AAA9-F2FAB9F0C4FA}.Debug|x86.Build.0 = Debug|x86
+		{0752F53D-46EF-44E2-AAA9-F2FAB9F0C4FA}.Release|Any CPU.ActiveCfg = Release|x86
+		{0752F53D-46EF-44E2-AAA9-F2FAB9F0C4FA}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{0752F53D-46EF-44E2-AAA9-F2FAB9F0C4FA}.Release|Mixed Platforms.Build.0 = Release|x86
 		{0752F53D-46EF-44E2-AAA9-F2FAB9F0C4FA}.Release|x86.ActiveCfg = Release|x86
 		{0752F53D-46EF-44E2-AAA9-F2FAB9F0C4FA}.Release|x86.Build.0 = Release|x86
+		{0FFBA04C-F690-41DB-A795-BD6EC44C04AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FFBA04C-F690-41DB-A795-BD6EC44C04AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FFBA04C-F690-41DB-A795-BD6EC44C04AA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{0FFBA04C-F690-41DB-A795-BD6EC44C04AA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{0FFBA04C-F690-41DB-A795-BD6EC44C04AA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0FFBA04C-F690-41DB-A795-BD6EC44C04AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FFBA04C-F690-41DB-A795-BD6EC44C04AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FFBA04C-F690-41DB-A795-BD6EC44C04AA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{0FFBA04C-F690-41DB-A795-BD6EC44C04AA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{0FFBA04C-F690-41DB-A795-BD6EC44C04AA}.Release|x86.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = pomelo-dotnetClient\pomelo-dotnetClient.csproj

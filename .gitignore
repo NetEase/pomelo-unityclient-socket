@@ -1,0 +1,12 @@
+# User-specific files
+*.suo
+*.user
+*.log
+*.userprefs
+*.pdb
+
+# directories
+/pomelo-dotnetClient/obj
+/pomelo-dotnetClient/bin
+/test/obj
+/test/bin
