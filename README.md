@@ -11,7 +11,7 @@ The project is based on some libraries as follows:
 * [dotnet demo](https://github.com/NetEase/pomelo-dotnetchat-console) A pomelo-chat client use console and write by c#.
 
 ## How to use
-To use the dotnetClient, just include the SimpleJson.dll and pomelo-dotnetClient.dll in your project.
+To use the dotnetClient, just include the ./dist/*.dll in your project.
 
 ## API
 
