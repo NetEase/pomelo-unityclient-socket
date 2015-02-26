@@ -26,6 +26,9 @@ namespace Pomelo.DotNetClient
 
         public void sendHeartBeat(object source, ElapsedEventArgs e)
         {
+            TimeSpan span = DateTime.Now - lastTime;
+            timeout = (int)span.TotalMilliseconds;
+
             //check timeout
             if (timeout > interval * 2)
             {
@@ -33,9 +36,6 @@ namespace Pomelo.DotNetClient
                 stop();
                 return;
             }
-
-            TimeSpan span = DateTime.Now - lastTime;
-            timeout = (int)span.TotalMilliseconds;
 
             //Send heart beat
             protocol.send(PackageType.PKG_HEARTBEAT);
