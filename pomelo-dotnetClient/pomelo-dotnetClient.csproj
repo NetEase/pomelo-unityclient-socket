@@ -37,7 +37,6 @@
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Compile Include="src\protobuf\Decoder.cs" />
     <Compile Include="src\protobuf\Encoder.cs" />

@@ -35,7 +35,7 @@ namespace Pomelo.DotNetClient
             }
 
             TimeSpan span = DateTime.Now - lastTime;
-            timeout += (int)span.TotalMilliseconds;
+            timeout = (int)span.TotalMilliseconds;
 
             //Send heart beat
             protocol.send(PackageType.PKG_HEARTBEAT);
