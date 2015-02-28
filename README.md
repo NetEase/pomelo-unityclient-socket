@@ -65,7 +65,7 @@ Disconnect the client.
 pclient.disconnect();
 ```
 
-protobuf 支持的格式:`uInt32, int32, sInt32, float, double, string.`
+protobuf surpported type:`uInt32, int32, sInt32, float, double, string.`
 
 The dotnet client support dictionary compress and protbuf encode. The use these function, just set the flag at server side.
 ##License
