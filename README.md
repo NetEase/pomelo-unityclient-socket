@@ -1,9 +1,9 @@
 pomelo-unityclient-socket
 =============================
-This is the pomelo dot client, support pomelo 0.3 and the new communicate protocol.It is based on native socket.
+This is the pomelo dotnet client, support pomelo 0.3 and the new communicate protocol.It is based on native socket.
 The project is based on some libraries as follows:
 
-* [simple-json](https://github.com/facebook-csharp-sdk/simple-json) A open source json library
+* [simple-json](https://github.com/facebook-csharp-sdk/simple-json) An open source json library
 
 ## Demo
 
@@ -11,7 +11,7 @@ The project is based on some libraries as follows:
 * [dotnet demo](https://github.com/NetEase/pomelo-dotnetchat-console) A pomelo-chat client use console and write by c#.
 
 ## How to use
-To use the dotnetClient, just include the ./dist/*.dll in your project.
+To use the dotnetClient, just include ./dist/*.dll in your project.
 
 ## API
 
@@ -64,6 +64,8 @@ Disconnect the client.
 ```c#
 pclient.disconnect();
 ```
+
+protobuf 支持的格式:`uInt32, int32, sInt32, float, double, string.`
 
 The dotnet client support dictionary compress and protbuf encode. The use these function, just set the flag at server side.
 ##License
