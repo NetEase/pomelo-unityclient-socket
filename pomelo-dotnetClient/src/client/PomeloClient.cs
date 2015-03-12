@@ -70,16 +70,13 @@ namespace Pomelo.DotNetClient
 
             try
             {
-                if (!IPAddress.TryParse(host, out ipAddress))
+                IPAddress[] addresses = Dns.GetHostEntry(host).AddressList;
+                foreach (var item in addresses)
                 {
-                    IPAddress[] addresses = Dns.GetHostEntry(host).AddressList;
-                    foreach (var item in addresses)
+                    if (item.AddressFamily == AddressFamily.InterNetwork)
                     {
-                        if (item.AddressFamily == AddressFamily.InterNetwork)
-                        {
-                            ipAddress = item;
-                            break;
-                        }
+                        ipAddress = item;
+                        break;
                     }
                 }
             }
