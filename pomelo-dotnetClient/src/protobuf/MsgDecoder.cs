@@ -148,6 +148,8 @@ namespace Pomelo.Protobuf
                     return this.decodeDouble();
                 case "string":
                     return this.decodeString();
+                case "object":
+                    return SimpleJson.SimpleJson.DeserializeObject(this.decodeString());
                 default:
                     return this.decodeObject(type, proto);
             }
