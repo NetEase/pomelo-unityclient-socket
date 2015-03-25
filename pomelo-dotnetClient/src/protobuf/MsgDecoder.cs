@@ -93,12 +93,12 @@ namespace Pomelo.Protobuf
                                             object _name;
                                             if (!msg.TryGetValue(name.ToString(), out _name))
                                             {
-                                                msg.Add(name.ToString(), new List<object>());
+                                                msg.Add(name.ToString(), new JsonArray());
                                             }
                                             object value_type;
                                             if (msg.TryGetValue(name.ToString(), out _name) && ((JsonObject)(value)).TryGetValue("type", out value_type))
                                             {
-                                                decodeArray((List<object>)_name, value_type.ToString(), proto);
+                                                decodeArray((JsonArray)_name, value_type.ToString(), proto);
                                             }
                                             break;
                                     }
@@ -114,7 +114,7 @@ namespace Pomelo.Protobuf
         /// <summary>
         /// Decode array in message.
         /// </summary>
-        private void decodeArray(List<object> list, string type, JsonObject proto)
+        private void decodeArray(JsonArray list, string type, JsonObject proto)
         {
             if (this.util.isSimpleType(type))
             {
