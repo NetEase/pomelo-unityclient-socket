@@ -93,12 +93,12 @@ namespace Pomelo.Protobuf
                                             object _name;
                                             if (!msg.TryGetValue(name.ToString(), out _name))
                                             {
-                                                msg.Add(name.ToString(), new List<object>());
+                                                msg.Add(name.ToString(), new JsonArray());
                                             }
                                             object value_type;
                                             if (msg.TryGetValue(name.ToString(), out _name) && ((JsonObject)(value)).TryGetValue("type", out value_type))
                                             {
-                                                decodeArray((List<object>)_name, value_type.ToString(), proto);
+                                                decodeArray((JsonArray)_name, value_type.ToString(), proto);
                                             }
                                             break;
                                     }
@@ -148,6 +148,8 @@ namespace Pomelo.Protobuf
                     return this.decodeDouble();
                 case "string":
                     return this.decodeString();
+                case "object":
+                    return SimpleJson.SimpleJson.DeserializeObject(this.decodeString());
                 default:
                     return this.decodeObject(type, proto);
             }
