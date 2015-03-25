@@ -10,3 +10,6 @@
 /pomelo-dotnetClient/bin
 /test/obj
 /test/bin
+
+# the Good Sync Folder
+*_gsdata_/

@@ -39,7 +39,7 @@ namespace Pomelo.DotNetClient
         public event Action<NetWorkState> NetWorkStateChangedEvent;
 
 
-        private NetWorkState netWorkState = NetWorkState.CLOSED;   //current network state
+        public NetWorkState netWorkState  {get; private set;}   //current network state
 
         private EventManager eventManager;
         private Socket socket;
@@ -48,10 +48,15 @@ namespace Pomelo.DotNetClient
         private uint reqId = 1;
 
         private ManualResetEvent timeoutEvent = new ManualResetEvent(false);
+        
         private int timeoutMSec = 8000;    //connect timeout count in millisecond
 
-        public PomeloClient()
+        private bool _keepWaitWhenConnect = true;
+
+        public PomeloClient(bool keepWaitWhenConnect = true)
         {
+            _keepWaitWhenConnect = keepWaitWhenConnect;
+            netWorkState = NetWorkState.CLOSED;
         }
 
         /// <summary>
@@ -70,15 +75,20 @@ namespace Pomelo.DotNetClient
 
             try
             {
-                IPAddress[] addresses = Dns.GetHostEntry(host).AddressList;
-                foreach (var item in addresses)
+                if (!IPAddress.TryParse(host, out ipAddress))
                 {
-                    if (item.AddressFamily == AddressFamily.InterNetwork)
+                    var addresses = Dns.GetHostEntry(host).AddressList;
+
+                    foreach (var item in addresses)
                     {
-                        ipAddress = item;
-                        break;
+                        if (item.AddressFamily == AddressFamily.InterNetwork)
+                        {
+                            ipAddress = item;
+                            break;
+                        }
                     }
                 }
+
             }
             catch (Exception e)
             {
@@ -121,7 +131,7 @@ namespace Pomelo.DotNetClient
                 }
             }), this.socket);
 
-            if (timeoutEvent.WaitOne(timeoutMSec, false))
+            if (_keepWaitWhenConnect && timeoutEvent.WaitOne(timeoutMSec, false))
             {
                 if (netWorkState != NetWorkState.CONNECTED && netWorkState != NetWorkState.ERROR)
                 {
