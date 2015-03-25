@@ -75,7 +75,7 @@ namespace Pomelo.DotNetClient.Test
 
         public static void Run()
         {
-            string host = "127.0.0.1";
+            string host = "192.168.0.156";
             int port = 3014;
 
             loginTest(host, port);
