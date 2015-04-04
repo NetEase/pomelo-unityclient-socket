@@ -121,7 +121,7 @@ namespace Pomelo.DotNetClient
                 }
             }), this.socket);
 
-            if (timeoutEvent.WaitOne(timeoutMSec, false))
+            if (!timeoutEvent.WaitOne(timeoutMSec, false))
             {
                 if (netWorkState != NetWorkState.CONNECTED && netWorkState != NetWorkState.ERROR)
                 {
