@@ -146,9 +146,9 @@ namespace Pomelo.Protobuf
                                 object msg_key;
                                 if (msg.TryGetValue(key, out msg_key))
                                 {
-                                    if (((List<object>)msg_key).Count > 0)
+                                    if (((JsonArray)msg_key).Count > 0)
                                     {
-                                        offset = encodeArray((List<object>)msg_key, (JsonObject)value, offset, buffer, proto);
+                                        offset = encodeArray((JsonArray)msg_key, (JsonObject)value, offset, buffer, proto);
                                     }
                                 }
                                 break;
@@ -163,7 +163,7 @@ namespace Pomelo.Protobuf
         /// <summary>
         /// Encode the array type.
         /// </summary>
-        private int encodeArray(List<object> msg, JsonObject value, int offset, byte[] buffer, JsonObject proto)
+        private int encodeArray(JsonArray msg, JsonObject value, int offset, byte[] buffer, JsonObject proto)
         {
             object value_type, value_tag;
             if (value.TryGetValue("type", out value_type) && value.TryGetValue("tag", out value_tag))
@@ -209,6 +209,7 @@ namespace Pomelo.Protobuf
                 case "double":
                     this.writeDouble(buffer, ref offset, value);
                     break;
+                case "object":
                 case "string":
                     this.writeString(buffer, ref offset, value);
                     break;
