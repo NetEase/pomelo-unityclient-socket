@@ -1,4 +1,4 @@
-﻿using SimpleJson;
+using SimpleJson;
 using System;
 using System.ComponentModel;
 using System.Net;
@@ -66,67 +66,59 @@ namespace Pomelo.DotNetClient
             eventManager = new EventManager();
             NetWorkChanged(NetWorkState.CONNECTING);
 
-            IPAddress ipAddress = null;
-
-            try
+            IPHostEntry resolvedServer = Dns.GetHostEntry(host);
+            for (int i = 0; i < resolvedServer.AddressList.Length; i++)
             {
-                IPAddress[] addresses = Dns.GetHostEntry(host).AddressList;
-                foreach (var item in addresses)
-                {
-                    if (item.AddressFamily == AddressFamily.InterNetwork)
-                    {
-                        ipAddress = item;
-                        break;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                NetWorkChanged(NetWorkState.ERROR);
-                return;
-            }
+                IPAddress address = resolvedServer.AddressList[i];
+                this.socket = new Socket(address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                IPEndPoint ie = new IPEndPoint(address, port);
 
-            if (ipAddress == null)
-            {
-                throw new Exception("can not parse host : " + host);
-            }
-
-            this.socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            IPEndPoint ie = new IPEndPoint(ipAddress, port);
-
-            socket.BeginConnect(ie, new AsyncCallback((result) =>
-            {
                 try
                 {
-                    this.socket.EndConnect(result);
-                    this.protocol = new Protocol(this, this.socket);
-                    NetWorkChanged(NetWorkState.CONNECTED);
-
-                    if (callback != null)
+                    socket.BeginConnect(ie, new AsyncCallback((result) =>
                     {
-                        callback();
-                    }
-                }
-                catch (SocketException e)
-                {
-                    if (netWorkState != NetWorkState.TIMEOUT)
-                    {
-                        NetWorkChanged(NetWorkState.ERROR);
-                    }
-                    Dispose();
-                }
-                finally
-                {
-                    timeoutEvent.Set();
-                }
-            }), this.socket);
+                        try
+                        {
+                            this.socket.EndConnect(result);
+                            this.protocol = new Protocol(this, this.socket);
+                            NetWorkChanged(NetWorkState.CONNECTED);
 
-            if (timeoutEvent.WaitOne(timeoutMSec, false))
-            {
-                if (netWorkState != NetWorkState.CONNECTED && netWorkState != NetWorkState.ERROR)
+                            if (callback != null)
+                            {
+                                callback();
+                            }
+                        }
+                        catch (SocketException e)
+                        {
+                            if (netWorkState != NetWorkState.TIMEOUT)
+                            {
+                                NetWorkChanged(NetWorkState.ERROR);
+                            }
+                            Dispose();
+                        }
+                        finally
+                        {
+                            timeoutEvent.Set();
+                        }
+                    }), this.socket);
+
+                    if (timeoutEvent.WaitOne(timeoutMSec, false))
+                    {
+                        if (netWorkState != NetWorkState.CONNECTED && netWorkState != NetWorkState.ERROR)
+                        {
+                            NetWorkChanged(NetWorkState.TIMEOUT);
+                            Dispose();
+                        }
+                    }
+                    break;
+                }
+                catch (SocketException)
                 {
-                    NetWorkChanged(NetWorkState.TIMEOUT);
-                    Dispose();
+                    if (this.socket != null)
+                        this.socket.Close();
+                    if (i == resolvedServer.AddressList.Length - 1)
+                        Console.WriteLine(
+                            "Failed to connect to the server.");
                 }
             }
         }
