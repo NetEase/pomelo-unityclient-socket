@@ -67,18 +67,28 @@ namespace Pomelo.DotNetClient
             NetWorkChanged(NetWorkState.CONNECTING);
 
             IPAddress ipAddress = null;
-
+            IPAddress ipAddressV6 = null;
             try
             {
                 IPAddress[] addresses = Dns.GetHostEntry(host).AddressList;
                 foreach (var item in addresses)
                 {
-                    if (item.AddressFamily == AddressFamily.InterNetwork)
+                    if (item.AddressFamily == AddressFamily.InterNetworkV6)
                     {
-                        ipAddress = item;
+                        ipAddressV6 = item;
                         break;
                     }
                 }
+                if(ipAddressV6 == null){
+	                foreach (var item in addresses)
+	                {
+	                    if (item.AddressFamily == AddressFamily.InterNetwork)
+	                    {
+	                        ipAddress = item;
+	                        break;
+	                    }
+	                }
+	            }
             }
             catch (Exception e)
             {
@@ -86,13 +96,20 @@ namespace Pomelo.DotNetClient
                 return;
             }
 
-            if (ipAddress == null)
+            if (ipAddressV6 == null && ipAddress == null)
             {
                 throw new Exception("can not parse host : " + host);
             }
 
-            this.socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            IPEndPoint ie = new IPEndPoint(ipAddress, port);
+            IPEndPoint ie = null;
+            if(ipAddressV6 != null){
+                this.socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp);
+                ie = new IPEndPoint(ipAddressV6, port);
+            }
+            else{
+                this.socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                ie = new IPEndPoint(ipAddress, port);
+            }
 
             socket.BeginConnect(ie, new AsyncCallback((result) =>
             {
@@ -216,8 +233,8 @@ namespace Pomelo.DotNetClient
 
         public void disconnect()
         {
-            Dispose();
             NetWorkChanged(NetWorkState.DISCONNECTED);
+            Dispose();
         }
 
         public void Dispose()
