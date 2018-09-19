@@ -5,191 +5,227 @@ using SimpleJson;
 using Pomelo.Protobuf;
 namespace Pomelo.DotNetClient
 {
-	public class MessageProtocol
-	{
-		private Dictionary<string, ushort> dict = new Dictionary<string, ushort>();
-		private Dictionary<ushort, string> abbrs = new Dictionary<ushort, string>();
-		private JsonObject encodeProtos = new JsonObject();
-		private JsonObject decodeProtos = new JsonObject();
-		private Dictionary<uint, string> reqMap;
-		private	Protobuf.Protobuf protobuf;
+    public class MessageProtocol
+    {
+        private Dictionary<string, ushort> dict = new Dictionary<string, ushort>();
+        private Dictionary<ushort, string> abbrs = new Dictionary<ushort, string>();
+        private JsonObject encodeProtos = new JsonObject();
+        private JsonObject decodeProtos = new JsonObject();
+        private Dictionary<uint, string> reqMap;
+        private Protobuf.Protobuf protobuf;
 
-		public const int MSG_Route_Limit = 255;
-		public const int MSG_Route_Mask = 0x01;
-		public const int MSG_Type_Mask = 0x07;
-		
-		public MessageProtocol(JsonObject dict, JsonObject serverProtos, JsonObject clientProtos)
-		{
-			ICollection<string> keys = dict.Keys;
-			
-			foreach(string key in keys){
-				ushort value = Convert.ToUInt16(dict[key]);
-				this.dict[key] = value;
-				this.abbrs[value] = key;
-			}
-			
-			protobuf = new Protobuf.Protobuf(clientProtos, serverProtos);
-			this.encodeProtos = clientProtos;
-			this.decodeProtos = serverProtos;
+        public const int MSG_Route_Limit = 255;
+        public const int MSG_Route_Mask = 0x01;
+        public const int MSG_Type_Mask = 0x07;
 
-			this.reqMap = new Dictionary<uint, string>();
-		}
+        public MessageProtocol(JsonObject dict, JsonObject serverProtos, JsonObject clientProtos)
+        {
+            ICollection<string> keys = dict.Keys;
 
-		public byte[] encode(string route, JsonObject msg){
-			return encode (route, 0, msg);
-		}
+            foreach (string key in keys)
+            {
+                ushort value = Convert.ToUInt16(dict[key]);
+                this.dict[key] = value;
+                this.abbrs[value] = key;
+            }
 
-		public byte[] encode(string route, uint id, JsonObject msg){
-			int routeLength = byteLength (route);
-			if (routeLength > MSG_Route_Limit) {
-				throw new Exception("Route is too long!");
-			}
+            protobuf = new Protobuf.Protobuf(clientProtos, serverProtos);
+            this.encodeProtos = clientProtos;
+            this.decodeProtos = serverProtos;
 
-			//Encode head
-			//The maximus length of head is 1 byte flag + 4 bytes message id + route string length + 1byte
-			byte[] head = new byte[routeLength + 6];
-			int offset = 1;
-			byte flag = 0;
+            this.reqMap = new Dictionary<uint, string>();
+        }
 
-			if (id > 0) {
-				byte[] bytes = Protobuf.Encoder.encodeUInt32(id);
+        public byte[] encode(string route, JsonObject msg)
+        {
+            return encode(route, 0, msg);
+        }
 
-				writeBytes(bytes, offset, head);
-				flag |= ((byte)MessageType.MSG_REQUEST)<<1;
-				offset += bytes.Length;
-			} else {
-				flag |= ((byte)MessageType.MSG_NOTIFY)<<1;
-			}
+        public byte[] encode(string route, uint id, JsonObject msg)
+        {
+            int routeLength = byteLength(route);
+            if (routeLength > MSG_Route_Limit)
+            {
+                throw new Exception("Route is too long!");
+            }
 
-			//Compress head
-			if (dict.ContainsKey(route)) { 		
-				ushort cmpRoute = dict[route];
-				writeShort (offset, cmpRoute, head);
-				flag |= MSG_Route_Mask;
-				offset += 2;
-			} else {
-				//Write route length
-				head[offset++] = (byte)routeLength;
+            //Encode head
+            //The maximus length of head is 1 byte flag + 4 bytes message id + route string length + 1byte
+            byte[] head = new byte[routeLength + 6];
+            int offset = 1;
+            byte flag = 0;
 
-				//Write route
-				writeBytes(Encoding.UTF8.GetBytes(route), offset, head);
-				offset += routeLength;
-			}
+            if (id > 0)
+            {
+                byte[] bytes = Protobuf.Encoder.encodeUInt32(id);
 
-			head [0] = flag;
+                writeBytes(bytes, offset, head);
+                flag |= ((byte)MessageType.MSG_REQUEST) << 1;
+                offset += bytes.Length;
+            }
+            else
+            {
+                flag |= ((byte)MessageType.MSG_NOTIFY) << 1;
+            }
 
-			//Encode body
-			byte[] body;
-			if (encodeProtos.ContainsKey (route)) {
-				body = protobuf.encode (route, msg);
-			} else {
-				body = Encoding.UTF8.GetBytes(msg.ToString());
-			}
+            //Compress head
+            if (dict.ContainsKey(route))
+            {
+                ushort cmpRoute = dict[route];
+                writeShort(offset, cmpRoute, head);
+                flag |= MSG_Route_Mask;
+                offset += 2;
+            }
+            else
+            {
+                //Write route length
+                head[offset++] = (byte)routeLength;
 
-			//Construct the result
-			byte[] result = new byte[offset + body.Length];
-			for (int i = 0; i < offset; i++) {
-				result[i] = head[i];
-			}
+                //Write route
+                writeBytes(Encoding.UTF8.GetBytes(route), offset, head);
+                offset += routeLength;
+            }
 
-			for (int i = 0; i < body.Length; i++) {
-				result[offset + i] = body[i];
-			}
+            head[0] = flag;
 
-			//Add id to route map
-			if(id > 0) reqMap.Add(id, route);
+            //Encode body
+            byte[] body;
+            if (encodeProtos.ContainsKey(route))
+            {
+                body = protobuf.encode(route, msg);
+            }
+            else
+            {
+                body = Encoding.UTF8.GetBytes(msg.ToString());
+            }
 
-			return result;
-		}
+            //Construct the result
+            byte[] result = new byte[offset + body.Length];
+            for (int i = 0; i < offset; i++)
+            {
+                result[i] = head[i];
+            }
 
-		public Message decode(byte[] buffer){
-			//Decode head
-			//Get flag
-			byte flag = buffer [0];
-			//Set offset to 1, for the 1st byte will always be the flag
-			int offset = 1;
+            for (int i = 0; i < body.Length; i++)
+            {
+                result[offset + i] = body[i];
+            }
 
-			//Get type from flag;
-			MessageType type = (MessageType)((flag>>1) & MSG_Type_Mask);
-			uint id = 0;
-			string route;
+            //Add id to route map
+            if (id > 0) reqMap.Add(id, route);
 
-			if (type == MessageType.MSG_RESPONSE) {
-				int length;
-				id = (uint)Protobuf.Decoder.decodeUInt32(offset, buffer, out length); 	
-				if(id <= 0 || !reqMap.ContainsKey(id)){
-					return null;
-				}else{
-					route = reqMap[id];
-					reqMap.Remove(id);
-				}
+            return result;
+        }
 
-				offset += length;
-			} else if (type == MessageType.MSG_PUSH) {
-				//Get route
-				if((flag & 0x01) == 1){
-					ushort routeId = readShort(offset, buffer);
-					route = abbrs[routeId];
+        public Message decode(byte[] buffer)
+        {
+            //Decode head
+            //Get flag
+            byte flag = buffer[0];
+            //Set offset to 1, for the 1st byte will always be the flag
+            int offset = 1;
 
-					offset += 2;
-				}else{
-					byte length = buffer[offset];
-					offset += 1;
+            //Get type from flag;
+            MessageType type = (MessageType)((flag >> 1) & MSG_Type_Mask);
+            uint id = 0;
+            string route;
 
-					route = Encoding.UTF8.GetString(buffer, offset, length);
-					offset += length;
-				}
-			} else {
-				return null;			
-			}
+            if (type == MessageType.MSG_RESPONSE)
+            {
+                int length;
+                id = (uint)Protobuf.Decoder.decodeUInt32(offset, buffer, out length);
+                if (id <= 0 || !reqMap.ContainsKey(id))
+                {
+                    return null;
+                }
+                else
+                {
+                    route = reqMap[id];
+                    reqMap.Remove(id);
+                }
 
-			//Decode body
-			byte[] body = new byte[buffer.Length - offset];
-			for (int i = 0; i < body.Length; i++) {
-				body[i] = buffer[i + offset];			
-			}
+                offset += length;
+            }
+            else if (type == MessageType.MSG_PUSH)
+            {
+                //Get route
+                if ((flag & 0x01) == 1)
+                {
+                    ushort routeId = readShort(offset, buffer);
+                    route = abbrs[routeId];
 
-			JsonObject msg;
-			if (decodeProtos.ContainsKey(route)) {
-				msg = protobuf.decode (route, body);
-			} else {
-				msg = (JsonObject)SimpleJson.SimpleJson.DeserializeObject(Encoding.UTF8.GetString(body));
-			}
+                    offset += 2;
+                }
+                else
+                {
+                    byte length = buffer[offset];
+                    offset += 1;
 
-			//Construct the message
-			return new Message (type, id, route, msg);
-		}
+                    route = Encoding.UTF8.GetString(buffer, offset, length);
+                    offset += length;
+                }
+            }
+            else
+            {
+                return null;
+            }
 
-		private void writeInt(int offset, uint value, byte[] bytes){
-			bytes [offset] = (byte)(value >> 24 & 0xff);
-			bytes [offset + 1] = (byte)(value >> 16 & 0xff);
-			bytes [offset + 2] = (byte)(value >> 8 & 0xff);
-			bytes [offset + 3] = (byte)(value & 0xff);
-		}
+            //Decode body
+            byte[] body = new byte[buffer.Length - offset];
+            for (int i = 0; i < body.Length; i++)
+            {
+                body[i] = buffer[i + offset];
+            }
 
-		private void writeShort(int offset, ushort value, byte[] bytes){
-			bytes [offset] = (byte)(value >> 8 & 0xff);
-			bytes [offset + 1] = (byte)(value & 0xff);
-		}
+            JsonObject msg;
+            if (decodeProtos.ContainsKey(route))
+            {
+                msg = protobuf.decode(route, body);
+            }
+            else
+            {
+                msg = (JsonObject)SimpleJson.SimpleJson.DeserializeObject(Encoding.UTF8.GetString(body));
+            }
 
-		private ushort readShort(int offset, byte[] bytes){
-			ushort result = 0;
+            //Construct the message
+            return new Message(type, id, route, msg);
+        }
 
-			result += (ushort)(bytes [offset] << 8);
-			result += (ushort)(bytes [offset + 1]);
+        private void writeInt(int offset, uint value, byte[] bytes)
+        {
+            bytes[offset] = (byte)(value >> 24 & 0xff);
+            bytes[offset + 1] = (byte)(value >> 16 & 0xff);
+            bytes[offset + 2] = (byte)(value >> 8 & 0xff);
+            bytes[offset + 3] = (byte)(value & 0xff);
+        }
 
-			return result;
-		}
+        private void writeShort(int offset, ushort value, byte[] bytes)
+        {
+            bytes[offset] = (byte)(value >> 8 & 0xff);
+            bytes[offset + 1] = (byte)(value & 0xff);
+        }
 
-		private int byteLength(string msg){
-			return Encoding.UTF8.GetBytes(msg).Length;
-		}
+        private ushort readShort(int offset, byte[] bytes)
+        {
+            ushort result = 0;
 
-		private void writeBytes(byte [] source, int offset, byte [] target){
-			for(int i = 0; i < source.Length; i++){
-				target[offset + i] = source[i];
-			}
-		}
-	}
+            result += (ushort)(bytes[offset] << 8);
+            result += (ushort)(bytes[offset + 1]);
+
+            return result;
+        }
+
+        private int byteLength(string msg)
+        {
+            return Encoding.UTF8.GetBytes(msg).Length;
+        }
+
+        private void writeBytes(byte[] source, int offset, byte[] target)
+        {
+            for (int i = 0; i < source.Length; i++)
+            {
+                target[offset + i] = source[i];
+            }
+        }
+    }
 }
-

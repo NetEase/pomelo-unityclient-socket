@@ -4,152 +4,174 @@ using System.Text;
 
 namespace Pomelo.DotNetClient
 {
-	public class Protocol
-	{
-		private MessageProtocol messageProtocol;
-		private ProtocolState state;
-		private Transporter transporter;
-		private HandShakeService handshake;
-		private HeartBeatService heartBeatService = null;
-		private PomeloClient pc;
+    public class Protocol
+    {
+        private MessageProtocol messageProtocol;
+        private ProtocolState state;
+        private Transporter transporter;
+        private HandShakeService handshake;
+        private HeartBeatService heartBeatService = null;
+        private PomeloClient pc;
 
-		public PomeloClient getPomeloClient(){
-			return this.pc;
-		}
+        public PomeloClient getPomeloClient()
+        {
+            return this.pc;
+        }
 
-		public Protocol(PomeloClient pc, System.Net.Sockets.Socket socket){
-			this.pc = pc;
-			this.transporter = new Transporter (socket, this.processMessage);
-			this.transporter.onDisconnect = onDisconnect;
+        public Protocol(PomeloClient pc, System.Net.Sockets.Socket socket)
+        {
+            this.pc = pc;
+            this.transporter = new Transporter(socket, this.processMessage);
+            this.transporter.onDisconnect = onDisconnect;
 
-			this.handshake = new HandShakeService(this);
-			this.state = ProtocolState.start;
-		}
+            this.handshake = new HandShakeService(this);
+            this.state = ProtocolState.start;
+        }
 
-		internal void start(JsonObject user, Action<JsonObject> callback){
-			this.transporter.start();
-			this.handshake.request(user, callback);
+        internal void start(JsonObject user, Action<JsonObject> callback)
+        {
+            this.transporter.start();
+            this.handshake.request(user, callback);
 
-			this.state = ProtocolState.handshaking;
-		}
-		
-		//Send notify, do not need id
-		internal void send(string route, JsonObject msg){
-			send (route, 0, msg);
-		}
+            this.state = ProtocolState.handshaking;
+        }
 
-		//Send request, user request id 
-		internal void send(string route, uint id, JsonObject msg){
-			if(this.state != ProtocolState.working) return;
+        //Send notify, do not need id
+        internal void send(string route, JsonObject msg)
+        {
+            send(route, 0, msg);
+        }
 
-			byte[] body = messageProtocol.encode (route, id, msg); 
+        //Send request, user request id 
+        internal void send(string route, uint id, JsonObject msg)
+        {
+            if (this.state != ProtocolState.working) return;
 
-			send (PackageType.PKG_DATA, body);
-		}
+            byte[] body = messageProtocol.encode(route, id, msg);
 
-		internal void send(PackageType type){
-			if(this.state == ProtocolState.closed) return;
-			transporter.send(PackageProtocol.encode (type));
-		}
+            send(PackageType.PKG_DATA, body);
+        }
 
-		//Send system message, these message do not use messageProtocol
-		internal void send(PackageType type, JsonObject msg){
-			//This method only used to send system package
-			if(type == PackageType .PKG_DATA) return;
-			
-			byte[] body = Encoding.UTF8.GetBytes(msg.ToString());
+        internal void send(PackageType type)
+        {
+            if (this.state == ProtocolState.closed) return;
+            transporter.send(PackageProtocol.encode(type));
+        }
 
-			send (type, body);
-		}
+        //Send system message, these message do not use messageProtocol
+        internal void send(PackageType type, JsonObject msg)
+        {
+            //This method only used to send system package
+            if (type == PackageType.PKG_DATA) return;
 
-		//Send message use the transporter
-		internal void send(PackageType type, byte[] body){
-			if(this.state == ProtocolState.closed) return;
+            byte[] body = Encoding.UTF8.GetBytes(msg.ToString());
 
-			byte[] pkg = PackageProtocol.encode (type, body);
+            send(type, body);
+        }
 
-			transporter.send(pkg);
-		}
-	
-		//Invoke by Transporter, process the message
-		internal void processMessage(byte[] bytes){
-			Package pkg = PackageProtocol.decode(bytes);
-			
-			//Ignore all the message except handshading at handshake stage
-			if (pkg.type == PackageType.PKG_HANDSHAKE && this.state == ProtocolState.handshaking) {
+        //Send message use the transporter
+        internal void send(PackageType type, byte[] body)
+        {
+            if (this.state == ProtocolState.closed) return;
 
-				//Ignore all the message except handshading
-				JsonObject data = (JsonObject)SimpleJson.SimpleJson.DeserializeObject(Encoding.UTF8.GetString(pkg.body));
-				
-				processHandshakeData(data);
+            byte[] pkg = PackageProtocol.encode(type, body);
 
-				this.state = ProtocolState.working;
+            transporter.send(pkg);
+        }
 
-			}else if (pkg.type == PackageType.PKG_HEARTBEAT && this.state == ProtocolState.working){
-				this.heartBeatService.resetTimeout();
-			}else if (pkg.type == PackageType.PKG_DATA && this.state == ProtocolState.working) {
-				this.heartBeatService.resetTimeout();
-				pc.processMessage(messageProtocol.decode (pkg.body));
-			}else if (pkg.type == PackageType.PKG_KICK) {
-				this.close();
-			}
-		}
-		
-		private void processHandshakeData(JsonObject msg){
-			//Handshake error
-			if(!msg.ContainsKey("code") || !msg.ContainsKey("sys") || Convert.ToInt32(msg["code"]) != 200){
-				throw new Exception("Handshake error! Please check your handshake config.");
-			}
+        //Invoke by Transporter, process the message
+        internal void processMessage(byte[] bytes)
+        {
+            Package pkg = PackageProtocol.decode(bytes);
 
-			//Set compress data
-			JsonObject sys = (JsonObject)msg["sys"];
+            //Ignore all the message except handshading at handshake stage
+            if (pkg.type == PackageType.PKG_HANDSHAKE && this.state == ProtocolState.handshaking)
+            {
 
-			JsonObject dict = new JsonObject();
-			if(sys.ContainsKey("dict")) dict = (JsonObject)sys["dict"];
+                //Ignore all the message except handshading
+                JsonObject data = (JsonObject)SimpleJson.SimpleJson.DeserializeObject(Encoding.UTF8.GetString(pkg.body));
 
-			JsonObject protos = new JsonObject();
-			JsonObject serverProtos = new JsonObject();
-			JsonObject clientProtos = new JsonObject();
+                processHandshakeData(data);
 
-			if(sys.ContainsKey("protos")){ 
-				protos = (JsonObject)sys["protos"];
-				serverProtos = (JsonObject)protos["server"];
-				clientProtos = (JsonObject)protos["client"];
-			}
+                this.state = ProtocolState.working;
 
-			messageProtocol = new MessageProtocol (dict, serverProtos, clientProtos);
+            }
+            else if (pkg.type == PackageType.PKG_HEARTBEAT && this.state == ProtocolState.working)
+            {
+                this.heartBeatService.resetTimeout();
+            }
+            else if (pkg.type == PackageType.PKG_DATA && this.state == ProtocolState.working)
+            {
+                this.heartBeatService.resetTimeout();
+                pc.processMessage(messageProtocol.decode(pkg.body));
+            }
+            else if (pkg.type == PackageType.PKG_KICK)
+            {
+                this.getPomeloClient().disconnect();
+                this.close();
+            }
+        }
 
-			//Init heartbeat service
-			int interval = 0;
-			if(sys.ContainsKey("heartbeat")) interval = Convert.ToInt32(sys["heartbeat"]);
-			heartBeatService = new HeartBeatService(interval, this);
+        private void processHandshakeData(JsonObject msg)
+        {
+            //Handshake error
+            if (!msg.ContainsKey("code") || !msg.ContainsKey("sys") || Convert.ToInt32(msg["code"]) != 200)
+            {
+                throw new Exception("Handshake error! Please check your handshake config.");
+            }
 
-			if(interval > 0){
-				heartBeatService.start();
-			}
+            //Set compress data
+            JsonObject sys = (JsonObject)msg["sys"];
 
-			//send ack and change protocol state
-			handshake.ack();
-			this.state = ProtocolState.working;
+            JsonObject dict = new JsonObject();
+            if (sys.ContainsKey("dict")) dict = (JsonObject)sys["dict"];
 
-			//Invoke handshake callback
-			JsonObject user = new JsonObject();
-			if(msg.ContainsKey("user")) user = (JsonObject)msg["user"];
-			handshake.invokeCallback(user);
-		}
+            JsonObject protos = new JsonObject();
+            JsonObject serverProtos = new JsonObject();
+            JsonObject clientProtos = new JsonObject();
 
-		//The socket disconnect
-		private void onDisconnect(){
-			this.pc.disconnect();
-		}
+            if (sys.ContainsKey("protos"))
+            {
+                protos = (JsonObject)sys["protos"];
+                serverProtos = (JsonObject)protos["server"];
+                clientProtos = (JsonObject)protos["client"];
+            }
 
-		internal void close(){
-			transporter.close();
+            messageProtocol = new MessageProtocol(dict, serverProtos, clientProtos);
 
-			if(heartBeatService != null) heartBeatService.stop();
+            //Init heartbeat service
+            int interval = 0;
+            if (sys.ContainsKey("heartbeat")) interval = Convert.ToInt32(sys["heartbeat"]);
+            heartBeatService = new HeartBeatService(interval, this);
 
-			this.state = ProtocolState.closed;
-		}
-	}
+            if (interval > 0)
+            {
+                heartBeatService.start();
+            }
+
+            //send ack and change protocol state
+            handshake.ack();
+            this.state = ProtocolState.working;
+
+            //Invoke handshake callback
+            JsonObject user = new JsonObject();
+            if (msg.ContainsKey("user")) user = (JsonObject)msg["user"];
+            handshake.invokeCallback(user);
+        }
+
+        //The socket disconnect
+        private void onDisconnect()
+        {
+            this.pc.disconnect();
+        }
+
+        internal void close()
+        {
+            transporter.close();
+
+            if (heartBeatService != null) heartBeatService.stop();
+
+            this.state = ProtocolState.closed;
+        }
+    }
 }
-

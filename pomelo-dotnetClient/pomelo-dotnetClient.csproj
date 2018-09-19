@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -24,7 +24,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
+    <OutputPath>..\dist\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
@@ -36,10 +36,6 @@
       <HintPath>..\lib\SimpleJson.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="src\" />
-    <Folder Include="src\client\test\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\protobuf\Decoder.cs" />
@@ -60,12 +56,11 @@
     <Compile Include="src\protocol\PackageTypes.cs" />
     <Compile Include="src\protocol\Protocol.cs" />
     <Compile Include="src\protocol\ProtocolState.cs" />
-    <Compile Include="src\test\Test.cs" />
-    <Compile Include="src\test\transportTest\TransportTest.cs" />
     <Compile Include="src\transport\Transporter.cs" />
     <Compile Include="src\transport\TransportState.cs" />
     <Compile Include="src\client\EventManager.cs" />
     <Compile Include="src\client\PomeloClient.cs" />
     <Compile Include="src\client\test\ClientTest.cs" />
+    <Compile Include="src\transport\test\TransportTest.cs" />
   </ItemGroup>
 </Project>

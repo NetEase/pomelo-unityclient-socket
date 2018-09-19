@@ -6,53 +6,56 @@ using System.Net.Sockets;
 
 namespace Pomelo.DotNetClient
 {
-	public class HandShakeService
-	{
-		private Protocol protocol;
-		private Action<JsonObject> callback;
+    public class HandShakeService
+    {
+        private Protocol protocol;
+        private Action<JsonObject> callback;
 
-		public const string Version = "0.3.0";
-		public const string Type = "unity-socket";
+        public const string Version = "0.3.0";
+        public const string Type = "unity-socket";
 
 
-		public HandShakeService (Protocol protocol)
-		{
-			this.protocol = protocol;
-		}
-		
-		public void request(JsonObject user, Action<JsonObject> callback){
-			byte[] body = Encoding.UTF8.GetBytes(buildMsg(user).ToString());
+        public HandShakeService(Protocol protocol)
+        {
+            this.protocol = protocol;
+        }
 
-			protocol.send(PackageType.PKG_HANDSHAKE, body);
+        public void request(JsonObject user, Action<JsonObject> callback)
+        {
+            byte[] body = Encoding.UTF8.GetBytes(buildMsg(user).ToString());
 
-			this.callback = callback;
-		}
+            protocol.send(PackageType.PKG_HANDSHAKE, body);
 
-		internal void invokeCallback(JsonObject data){
-			//Invoke the handshake callback
-			if(callback != null) callback.Invoke(data);
-		}
+            this.callback = callback;
+        }
 
-		public void ack(){
-			protocol.send(PackageType.PKG_HANDSHAKE_ACK, new byte[0]);
-		}
+        internal void invokeCallback(JsonObject data)
+        {
+            //Invoke the handshake callback
+            if (callback != null) callback.Invoke(data);
+        }
 
-		private JsonObject buildMsg(JsonObject user) {
-			if(user == null) user = new JsonObject();
+        public void ack()
+        {
+            protocol.send(PackageType.PKG_HANDSHAKE_ACK, new byte[0]);
+        }
 
-			JsonObject msg = new JsonObject();
+        private JsonObject buildMsg(JsonObject user)
+        {
+            if (user == null) user = new JsonObject();
 
-			//Build sys option
-			JsonObject sys = new JsonObject();
-			sys["version"] = Version;
-			sys["type"] = Type;
+            JsonObject msg = new JsonObject();
 
-			//Build handshake message
-			msg ["sys"] = sys;
-			msg ["user"] = user;
+            //Build sys option
+            JsonObject sys = new JsonObject();
+            sys["version"] = Version;
+            sys["type"] = Type;
 
-			return msg;	
-		}	
-	}
+            //Build handshake message
+            msg["sys"] = sys;
+            msg["user"] = user;
+
+            return msg;
+        }
+    }
 }
-

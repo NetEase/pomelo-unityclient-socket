@@ -1,30 +1,42 @@
 pomelo-unityclient-socket
 =============================
-This is the pomelo dot client, support pomelo 0.3 and the new communicate protocol.It is based on native socket.
+This is the pomelo dotnet client, support pomelo 0.3 and the new communicate protocol.It is based on native socket.
 The project is based on some libraries as follows:
 
-* [SimpleJson](http://simplejson.codeplex.com/) A open source json library
+* [simple-json](https://github.com/facebook-csharp-sdk/simple-json) An open source json library
 
-## Demo 
+## Demo
 
 * [Unity3D demo](https://github.com/NetEase/pomelo-unitychat-socket) A pomelo-chat client use unity 3D.
 * [dotnet demo](https://github.com/NetEase/pomelo-dotnetchat-console) A pomelo-chat client use console and write by c#.
 
 ## How to use
-To use the dotnetClient, just include the SimpleJson.dll and pomelo-dotnetClient.dll in your project.
+To use the dotnetClient, just include ./dist/*.dll in your project.
 
 ## API
 
-Create the connect
+Initialize pomelo client
 
 ```c#
 using namespace Pomelo.DotNetClient
-PomeloClient pclient = new PomeloClient("127.0.0.1", 3014);
+string host="127.0.0.1";//(www.xxx.com/127.0.0.1/::1/localhost etc.)
+int port=3014;
+PomeloClient pclient = new PomeloClient();
 
-//The user data is the handshake user params
-JsonObject user = new JsonObject();
-pclient.connect(user, (data)=>{
-  //process handshake call back data
+//listen on network state changed event
+pclient.NetWorkStateChangedEvent += (state) =>
+{
+    Console.WriteLine(state);
+};
+
+pclient.initClient(host, port, () =>
+{
+    //The user data is the handshake user params
+    JsonObject user = new JsonObject();
+    pclient.connect(user, data =>
+    {
+     	//process handshake call back data
+    });
 });
 
 ```
@@ -52,6 +64,8 @@ Disconnect the client.
 ```c#
 pclient.disconnect();
 ```
+
+protobuf surpported type:`uInt32, int32, sInt32, float, double, string.`
 
 The dotnet client support dictionary compress and protbuf encode. The use these function, just set the flag at server side.
 ##License
