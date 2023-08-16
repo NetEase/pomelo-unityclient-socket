@@ -1,15 +1,16 @@
 using System;
 using System.Text;
-using SimpleJson;
+using Newtonsoft.Json;
 using System.Net;
 using System.Net.Sockets;
+using Newtonsoft.Json.Linq;
 
 namespace Pomelo.DotNetClient
 {
     public class HandShakeService
     {
         private Protocol protocol;
-        private Action<JsonObject> callback;
+        private Action<JObject> callback;
 
         public const string Version = "0.3.0";
         public const string Type = "unity-socket";
@@ -20,7 +21,7 @@ namespace Pomelo.DotNetClient
             this.protocol = protocol;
         }
 
-        public void request(JsonObject user, Action<JsonObject> callback)
+        public void request(JObject user, Action<JObject> callback)
         {
             byte[] body = Encoding.UTF8.GetBytes(buildMsg(user).ToString());
 
@@ -29,7 +30,7 @@ namespace Pomelo.DotNetClient
             this.callback = callback;
         }
 
-        internal void invokeCallback(JsonObject data)
+        internal void invokeCallback(JObject data)
         {
             //Invoke the handshake callback
             if (callback != null) callback.Invoke(data);
@@ -40,14 +41,14 @@ namespace Pomelo.DotNetClient
             protocol.send(PackageType.PKG_HANDSHAKE_ACK, new byte[0]);
         }
 
-        private JsonObject buildMsg(JsonObject user)
+        private JObject buildMsg(JObject user)
         {
-            if (user == null) user = new JsonObject();
+            if (user == null) user = new JObject();
 
-            JsonObject msg = new JsonObject();
+            JObject msg = new JObject();
 
             //Build sys option
-            JsonObject sys = new JsonObject();
+            JObject sys = new JObject();
             sys["version"] = Version;
             sys["type"] = Type;
 

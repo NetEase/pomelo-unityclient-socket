@@ -1,5 +1,6 @@
 using System;
-using SimpleJson;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Pomelo.Protobuf
 {
@@ -8,18 +9,18 @@ namespace Pomelo.Protobuf
         private MsgDecoder decoder;
         private MsgEncoder encoder;
 
-        public Protobuf(JsonObject encodeProtos, JsonObject decodeProtos)
+        public Protobuf(JObject encodeProtos, JObject decodeProtos)
         {
             this.encoder = new MsgEncoder(encodeProtos);
             this.decoder = new MsgDecoder(decodeProtos);
         }
 
-        public byte[] encode(string route, JsonObject msg)
+        public byte[] encode(string route, JObject msg)
         {
             return encoder.encode(route, msg);
         }
 
-        public JsonObject decode(string route, byte[] buffer)
+        public JObject decode(string route, byte[] buffer)
         {
             return decoder.decode(route, buffer);
         }

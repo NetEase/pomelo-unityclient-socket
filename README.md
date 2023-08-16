@@ -3,7 +3,8 @@ pomelo-unityclient-socket
 This is the pomelo dotnet client, support pomelo 0.3 and the new communicate protocol.It is based on native socket.
 The project is based on some libraries as follows:
 
-* [simple-json](https://github.com/facebook-csharp-sdk/simple-json) An open source json library
+* [simple-json](https://github.com/facebook-csharp-sdk/simple-json) An open source json library Delete ！！
+* [newtonsoft-json] com.unity.nuget.newtonsoft-json@3.0.2 Add
 
 ## Demo
 
