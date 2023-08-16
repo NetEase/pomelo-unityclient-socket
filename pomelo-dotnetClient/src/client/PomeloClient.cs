@@ -1,9 +1,10 @@
-﻿using SimpleJson;
+﻿using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using Newtonsoft.Json.Linq;
 
 namespace Pomelo.DotNetClient
 {
@@ -150,17 +151,17 @@ namespace Pomelo.DotNetClient
             connect(null, null);
         }
 
-        public void connect(JsonObject user)
+        public void connect(JObject user)
         {
             connect(user, null);
         }
 
-        public void connect(Action<JsonObject> handshakeCallback)
+        public void connect(Action<JObject> handshakeCallback)
         {
             connect(null, handshakeCallback);
         }
 
-        public bool connect(JsonObject user, Action<JsonObject> handshakeCallback)
+        public bool connect(JObject user, Action<JObject> handshakeCallback)
         {
             try
             {
@@ -174,13 +175,13 @@ namespace Pomelo.DotNetClient
             }
         }
 
-        private JsonObject emptyMsg = new JsonObject();
-        public void request(string route, Action<JsonObject> action)
+        private JObject emptyMsg = new JObject();
+        public void request(string route, Action<JObject> action)
         {
             this.request(route, emptyMsg, action);
         }
 
-        public void request(string route, JsonObject msg, Action<JsonObject> action)
+        public void request(string route, JObject msg, Action<JObject> action)
         {
             this.eventManager.AddCallBack(reqId, action);
             protocol.send(route, reqId, msg);
@@ -188,12 +189,12 @@ namespace Pomelo.DotNetClient
             reqId++;
         }
 
-        public void notify(string route, JsonObject msg)
+        public void notify(string route, JObject msg)
         {
             protocol.send(route, msg);
         }
 
-        public void on(string eventName, Action<JsonObject> action)
+        public void on(string eventName, Action<JObject> action)
         {
             eventManager.AddOnEvent(eventName, action);
         }

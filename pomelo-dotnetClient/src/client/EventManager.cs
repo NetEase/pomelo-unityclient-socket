@@ -1,23 +1,24 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using SimpleJson;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Pomelo.DotNetClient
 {
     public class EventManager : IDisposable
     {
-        private Dictionary<uint, Action<JsonObject>> callBackMap;
-        private Dictionary<string, List<Action<JsonObject>>> eventMap;
+        private Dictionary<uint, Action<JObject>> callBackMap;
+        private Dictionary<string, List<Action<JObject>>> eventMap;
 
         public EventManager()
         {
-            this.callBackMap = new Dictionary<uint, Action<JsonObject>>();
-            this.eventMap = new Dictionary<string, List<Action<JsonObject>>>();
+            this.callBackMap = new Dictionary<uint, Action<JObject>>();
+            this.eventMap = new Dictionary<string, List<Action<JObject>>>();
         }
 
         //Adds callback to callBackMap by id.
-        public void AddCallBack(uint id, Action<JsonObject> callback)
+        public void AddCallBack(uint id, Action<JObject> callback)
         {
             if (id > 0 && callback != null)
             {
@@ -31,23 +32,23 @@ namespace Pomelo.DotNetClient
         /// <param name='pomeloMessage'>
         /// Pomelo message.
         /// </param>
-        public void InvokeCallBack(uint id, JsonObject data)
+        public void InvokeCallBack(uint id, JObject data)
         {
             if (!callBackMap.ContainsKey(id)) return;
             callBackMap[id].Invoke(data);
         }
 
         //Adds the event to eventMap by name.
-        public void AddOnEvent(string eventName, Action<JsonObject> callback)
+        public void AddOnEvent(string eventName, Action<JObject> callback)
         {
-            List<Action<JsonObject>> list = null;
+            List<Action<JObject>> list = null;
             if (this.eventMap.TryGetValue(eventName, out list))
             {
                 list.Add(callback);
             }
             else
             {
-                list = new List<Action<JsonObject>>();
+                list = new List<Action<JObject>>();
                 list.Add(callback);
                 this.eventMap.Add(eventName, list);
             }
@@ -60,12 +61,12 @@ namespace Pomelo.DotNetClient
         /// <param name="value"></param>
         /// <returns></returns>
         ///
-        public void InvokeOnEvent(string route, JsonObject msg)
+        public void InvokeOnEvent(string route, JObject msg)
         {
             if (!this.eventMap.ContainsKey(route)) return;
 
-            List<Action<JsonObject>> list = eventMap[route];
-            foreach (Action<JsonObject> action in list) action.Invoke(msg);
+            List<Action<JObject>> list = eventMap[route];
+            foreach (Action<JObject> action in list) action.Invoke(msg);
         }
 
         // Dispose() calls Dispose(true)

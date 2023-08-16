@@ -1,5 +1,6 @@
 using System;
-using SimpleJson;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Pomelo.DotNetClient
 {
@@ -8,9 +9,9 @@ namespace Pomelo.DotNetClient
         public MessageType type;
         public string route;
         public uint id;
-        public JsonObject data;
+        public JObject data;
 
-        public Message(MessageType type, uint id, string route, JsonObject data)
+        public Message(MessageType type, uint id, string route, JObject data)
         {
             this.type = type;
             this.id = id;

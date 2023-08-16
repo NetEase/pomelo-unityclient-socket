@@ -1,6 +1,7 @@
 using System;
-using SimpleJson;
+using Newtonsoft.Json;
 using System.Text;
+using Newtonsoft.Json.Linq;
 
 namespace Pomelo.DotNetClient
 {
@@ -28,7 +29,7 @@ namespace Pomelo.DotNetClient
             this.state = ProtocolState.start;
         }
 
-        internal void start(JsonObject user, Action<JsonObject> callback)
+        internal void start(JObject user, Action<JObject> callback)
         {
             this.transporter.start();
             this.handshake.request(user, callback);
@@ -37,13 +38,13 @@ namespace Pomelo.DotNetClient
         }
 
         //Send notify, do not need id
-        internal void send(string route, JsonObject msg)
+        internal void send(string route, JObject msg)
         {
             send(route, 0, msg);
         }
 
         //Send request, user request id 
-        internal void send(string route, uint id, JsonObject msg)
+        internal void send(string route, uint id, JObject msg)
         {
             if (this.state != ProtocolState.working) return;
 
@@ -59,7 +60,7 @@ namespace Pomelo.DotNetClient
         }
 
         //Send system message, these message do not use messageProtocol
-        internal void send(PackageType type, JsonObject msg)
+        internal void send(PackageType type, JObject msg)
         {
             //This method only used to send system package
             if (type == PackageType.PKG_DATA) return;
@@ -89,7 +90,7 @@ namespace Pomelo.DotNetClient
             {
 
                 //Ignore all the message except handshading
-                JsonObject data = (JsonObject)SimpleJson.SimpleJson.DeserializeObject(Encoding.UTF8.GetString(pkg.body));
+                JObject data = (JObject)JsonConvert.DeserializeObject(Encoding.UTF8.GetString(pkg.body));
 
                 processHandshakeData(data);
 
@@ -112,7 +113,7 @@ namespace Pomelo.DotNetClient
             }
         }
 
-        private void processHandshakeData(JsonObject msg)
+        private void processHandshakeData(JObject msg)
         {
             //Handshake error
             if (!msg.ContainsKey("code") || !msg.ContainsKey("sys") || Convert.ToInt32(msg["code"]) != 200)
@@ -121,20 +122,20 @@ namespace Pomelo.DotNetClient
             }
 
             //Set compress data
-            JsonObject sys = (JsonObject)msg["sys"];
+            JObject sys = (JObject)msg["sys"];
 
-            JsonObject dict = new JsonObject();
-            if (sys.ContainsKey("dict")) dict = (JsonObject)sys["dict"];
+            JObject dict = new JObject();
+            if (sys.ContainsKey("dict")) dict = (JObject)sys["dict"];
 
-            JsonObject protos = new JsonObject();
-            JsonObject serverProtos = new JsonObject();
-            JsonObject clientProtos = new JsonObject();
+            JObject protos = new JObject();
+            JObject serverProtos = new JObject();
+            JObject clientProtos = new JObject();
 
             if (sys.ContainsKey("protos"))
             {
-                protos = (JsonObject)sys["protos"];
-                serverProtos = (JsonObject)protos["server"];
-                clientProtos = (JsonObject)protos["client"];
+                protos = (JObject)sys["protos"];
+                serverProtos = (JObject)protos["server"];
+                clientProtos = (JObject)protos["client"];
             }
 
             messageProtocol = new MessageProtocol(dict, serverProtos, clientProtos);
@@ -154,8 +155,8 @@ namespace Pomelo.DotNetClient
             this.state = ProtocolState.working;
 
             //Invoke handshake callback
-            JsonObject user = new JsonObject();
-            if (msg.ContainsKey("user")) user = (JsonObject)msg["user"];
+            JObject user = new JObject();
+            if (msg.ContainsKey("user")) user = (JObject)msg["user"];
             handshake.invokeCallback(user);
         }
 

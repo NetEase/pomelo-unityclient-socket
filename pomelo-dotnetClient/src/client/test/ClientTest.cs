@@ -1,5 +1,7 @@
 using System;
-using SimpleJson;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
 
 namespace Pomelo.DotNetClient.Test
 {
@@ -23,14 +25,15 @@ namespace Pomelo.DotNetClient.Test
                 {
 
                     Console.WriteLine("on data back" + data.ToString());
-                    JsonObject msg = new JsonObject();
+                    
+                    JObject msg = new JObject();
                     msg["uid"] = 111;
                     pc.request("gate.gateHandler.queryEntry", msg, OnQuery);
                 });
             });
         }
 
-        public static void OnQuery(JsonObject result)
+        public static void OnQuery(JObject result)
         {
             if (Convert.ToInt32(result["code"]) == 200)
             {
@@ -49,11 +52,11 @@ namespace Pomelo.DotNetClient.Test
                 {
                     pc.connect(null, (data) =>
                     {
-                        JsonObject userMessage = new JsonObject();
+                        JObject userMessage = new JObject();
                         Console.WriteLine("on connect to connector!");
 
                         //Login
-                        JsonObject msg = new JsonObject();
+                        JObject msg = new JObject();
                         msg["username"] = "test";
                         msg["rid"] = "pomelo";
 
@@ -63,12 +66,12 @@ namespace Pomelo.DotNetClient.Test
             }
         }
 
-        public static void OnEnter(JsonObject result)
+        public static void OnEnter(JObject result)
         {
             Console.WriteLine("on login " + result.ToString());
         }
 
-        public static void onDisconnect(JsonObject result)
+        public static void onDisconnect(JObject result)
         {
             Console.WriteLine("on sockect disconnected!");
         }

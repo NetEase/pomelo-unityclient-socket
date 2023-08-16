@@ -1,7 +1,9 @@
 using System;
 using System.Text;
 using System.Collections.Generic;
-using SimpleJson;
+using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Pomelo.Protobuf;
 namespace Pomelo.DotNetClient
 {
@@ -9,8 +11,8 @@ namespace Pomelo.DotNetClient
     {
         private Dictionary<string, ushort> dict = new Dictionary<string, ushort>();
         private Dictionary<ushort, string> abbrs = new Dictionary<ushort, string>();
-        private JsonObject encodeProtos = new JsonObject();
-        private JsonObject decodeProtos = new JsonObject();
+        private JObject encodeProtos = new JObject();
+        private JObject decodeProtos = new JObject();
         private Dictionary<uint, string> reqMap;
         private Protobuf.Protobuf protobuf;
 
@@ -18,12 +20,11 @@ namespace Pomelo.DotNetClient
         public const int MSG_Route_Mask = 0x01;
         public const int MSG_Type_Mask = 0x07;
 
-        public MessageProtocol(JsonObject dict, JsonObject serverProtos, JsonObject clientProtos)
+        public MessageProtocol(JObject dict, JObject serverProtos, JObject clientProtos)
         {
-            ICollection<string> keys = dict.Keys;
-
-            foreach (string key in keys)
+            foreach (var jToken in dict.Properties())
             {
+                var key = jToken.Name;
                 ushort value = Convert.ToUInt16(dict[key]);
                 this.dict[key] = value;
                 this.abbrs[value] = key;
@@ -36,12 +37,12 @@ namespace Pomelo.DotNetClient
             this.reqMap = new Dictionary<uint, string>();
         }
 
-        public byte[] encode(string route, JsonObject msg)
+        public byte[] encode(string route, JObject msg)
         {
             return encode(route, 0, msg);
         }
 
-        public byte[] encode(string route, uint id, JsonObject msg)
+        public byte[] encode(string route, uint id, JObject msg)
         {
             int routeLength = byteLength(route);
             if (routeLength > MSG_Route_Limit)
@@ -177,14 +178,14 @@ namespace Pomelo.DotNetClient
                 body[i] = buffer[i + offset];
             }
 
-            JsonObject msg;
+            JObject msg;
             if (decodeProtos.ContainsKey(route))
             {
                 msg = protobuf.decode(route, body);
             }
             else
             {
-                msg = (JsonObject)SimpleJson.SimpleJson.DeserializeObject(Encoding.UTF8.GetString(body));
+                msg = (JObject)JsonConvert.DeserializeObject(Encoding.UTF8.GetString(body));
             }
 
             //Construct the message
